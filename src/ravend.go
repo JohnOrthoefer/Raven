@@ -4,12 +4,14 @@ import (
 	"bytes"
 	"fmt"
 	"os/exec"
+	"regexp"
 	"time"
 )
 
 type hostRecord struct {
 	hostname string
 	last     time.Time
+	exitCode int
 	inflight bool
 }
 
@@ -42,7 +44,7 @@ func getDue() *hostRecord {
 }
 
 func getTimestamp() string {
-	return time.Now().Format("Mon Jan _2 15:04:05 2006")
+	return time.Now().Format(time.RFC1123Z)
 }
 
 func LogMessage(t string) {
@@ -71,10 +73,13 @@ func consume(work int) {
 		var out bytes.Buffer
 		cmd.Stdout = &out
 		err := cmd.Run()
-		if err != nil {
-			panic(err)
+		msg.exitCode = 0
+		if err == nil {
+			msg.exitCode = 3
 		}
-		LogMessage(fmt.Sprintf("Worker %d: Done with %s", work, msg.hostname))
+		r, _ := regexp.Compile(`(\d+\.?\d+)/(\d+\.?\d+)/(\d+\.?\d+)/(\d+\.?\d+)`)
+		rtt := r.FindAllStringSubmatch(out.String(), -1)
+		LogMessage(fmt.Sprintf("Worker %d: Done %s rtt:%s '%q'", work, msg.hostname, rtt[0][3], rtt))
 		msg.last = time.Now()
 		msg.inflight = false
 	}
