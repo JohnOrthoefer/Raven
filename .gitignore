@@ -1,0 +1,17 @@
+#
+# Global git ignore 
+# git config --global core.excludesfile ~/.gitignore
+#
+# adds the following line to .gitconfig
+# [core]
+# excludesfile = ~/.gitignore
+#
+# Byte compiled Python files
+__pycache__/
+*.py[cod]
+
+*swp
+
+*.tar
+*.tgz
+*.tar.bz2
