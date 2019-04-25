@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os/exec"
 	"regexp"
+	"strconv"
 	"time"
 )
 
@@ -66,6 +67,8 @@ func produce() {
 }
 
 func consume(work int) {
+	r, _ := regexp.Compile(`(\d+\.?\d+)/(\d+\.?\d+)/(\d+\.?\d+)/(\d+\.?\d+)`)
+	st, _ := regexp.Compile(`(\d+)\% packet loss`)
 	for {
 		msg := <-msgs
 		LogMessage(fmt.Sprintf("Worker %d, pinging %s", work, msg.hostname))
@@ -77,9 +80,11 @@ func consume(work int) {
 		if err == nil {
 			msg.exitCode = 3
 		}
-		r, _ := regexp.Compile(`(\d+\.?\d+)/(\d+\.?\d+)/(\d+\.?\d+)/(\d+\.?\d+)`)
 		rtt := r.FindAllStringSubmatch(out.String(), -1)
-		LogMessage(fmt.Sprintf("Worker %d: Done %s rtt:%s '%q'", work, msg.hostname, rtt[0][3], rtt))
+		pls := st.FindAllStringSubmatch(out.String(), -1)
+		rttAvg, _ := strconv.ParseFloat(rtt[0][3], 32)
+		loss, _ := strconv.ParseInt(pls[0][1], 10, 32)
+		LogMessage(fmt.Sprintf("Worker %d: Done %s rtt:%f loss:%d", work, msg.hostname, rttAvg, loss))
 		msg.last = time.Now()
 		msg.inflight = false
 	}
