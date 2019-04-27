@@ -7,17 +7,19 @@ import (
 )
 
 type HostEntry struct {
-  IPv4      string
-  Hostname  string
-  Group     string
+  IPv4        string
+  Hostname    string
+  DisplayName string
+  Group       string
 }
 
 type CheckEntry struct {
-  CheckF    func( h HostEntry, p map[string]string)
-  CheckN    string
-  Interval  [4]time.Duration
-  Hosts     []string
-  Options   map[string]string
+  DisplayName string
+  CheckF      func( h HostEntry, p map[string]string)
+  CheckN      string
+  Interval    [4]time.Duration
+  Hosts       []string
+  Options     map[string]string
 }
 
 var hosts map[string]*HostEntry
@@ -39,16 +41,18 @@ func getEntry( kv map[string]string, n string) string {
   return ""
 }
 
-func newHost( kv map[string]string) *HostEntry {
+func newHost( n string, kv map[string]string) *HostEntry {
   r := new( HostEntry)
+  r.DisplayName = n
   r.IPv4 = getEntry( kv, "ipv4")
   r.Hostname = getEntry( kv, "hostname")
   r.Group = getEntry( kv, "group")
   return r
 }
 
-func newCheck( kv map[string]string) *CheckEntry {
+func newCheck( n string, kv map[string]string) *CheckEntry {
   r := new( CheckEntry)
+  r.DisplayName = n
   // Check function that will be run
   r.CheckN = getEntry( kv, "checkwith")
 
@@ -94,9 +98,9 @@ func AddEntry( n string, kv map[string]string) {
   }
 
   if _,ok := kv["hostname"]; ok {
-    hosts[n] = newHost(kv)
+    hosts[n] = newHost(n, kv)
   } else if _,ok := kv["checkwith"]; ok {
-    checks[n] = newCheck( kv)
+    checks[n] = newCheck(n, kv)
   } else {
     log.Printf( "Unknown Section Type %s", n)
   }

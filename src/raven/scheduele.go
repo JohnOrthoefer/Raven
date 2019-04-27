@@ -40,7 +40,7 @@ func BuildSchedule() {
 func runner(id int, rec, done chan *StatusEntry) {
   for {
     job := <-rec
-    log.Printf( "worker %d, got Job %s", id, job.Host.Hostname)
+    log.Printf( "worker %d, got Job %s(%s)", id, job.Host.DisplayName,job.Check.DisplayName)
 		cmd := exec.Command("/usr/bin/ping", "-c", "5", job.Host.Hostname)
 		var out bytes.Buffer
 		cmd.Stdout = &out
@@ -79,7 +79,7 @@ func disbatcher(send chan *StatusEntry) {
         sentJob = true
         this.Queued = true
         log.Printf( "Disbatching %s(%s)",
-          this.Host.Hostname,this.Check.CheckN)
+          this.Host.DisplayName,this.Check.CheckN)
         send <- this
       }
     }
@@ -96,7 +96,7 @@ func disbatcher(send chan *StatusEntry) {
         }
       }
       sleepTime := time.Until( when)
-      log.Printf( "Sleeping for %s", sleepTime)
+      log.Printf( "Sleeping for %s", sleepTime.Round(time.Second))
       time.Sleep( sleepTime)
     }
   }
@@ -111,8 +111,9 @@ func receiver(r chan *StatusEntry) {
     job.Last = time.Now()
     job.Next = job.Last.Add( job.Check.Interval[job.ExitCode]).
       Add(time.Duration(rand.Intn(10)-5) * time.Second)
-    log.Printf( "Rescheduling %s(%s) @%s",
-      job.Host.Hostname,job.Check.CheckN, job.Next)
+    log.Printf( "Rescheduling %s(%s) in %s Exit: %d",
+      job.Host.DisplayName,job.Check.CheckN,
+      time.Until(job.Next).Round(time.Second), job.ExitCode)
     job.Queued = false
   }
 }
@@ -132,7 +133,7 @@ func StartSchedule(work int) {
 func DumpSchedule() {
   for i:=range status {
     log.Printf( "%s[%s] - Last:%s(Exit:%d) Next:%s ",
-      status[i].Host.Hostname, status[i].Check.CheckN,
+      status[i].Host.DisplayName, status[i].Check.CheckN,
       status[i].Last.Truncate(0).Local(), status[i].ExitCode,
       status[i].Next.Truncate(0).Local())
   }
