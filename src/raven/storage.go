@@ -34,6 +34,11 @@ func contains( v string, s []string) bool {
   return false
 }
 
+func isHost( h string) bool {
+  _,ok := hosts[h]
+  return ok
+}
+
 func getEntry( kv map[string]string, n string) string {
   if v,ok := kv[n]; ok {
     return v
@@ -123,7 +128,15 @@ func ListChecks() []string {
 
 func ListCheckHosts( c string) []string {
   if _,ok := checks[c]; ok {
-    return checks[c].Hosts
+    var rtn []string
+    for _,h:=range checks[c].Hosts {
+      if !isHost(h) {
+        log.Printf( "%s, can not find %s", c, h)
+        continue
+      }
+      rtn = append( rtn, h)
+    }
+    return rtn
   }
   return nil
 }
