@@ -1,5 +1,7 @@
 package raven
 
+// Scheduling bits
+
 import (
   "bytes"
   "log"
@@ -9,6 +11,7 @@ import (
   "math/rand"
 )
 
+// the basic entry for scheduling a check against a host
 type StatusEntry struct {
   Check     *CheckEntry
   Host      *HostEntry
@@ -18,8 +21,10 @@ type StatusEntry struct {
   Last      time.Time
 }
 
+// an array that tracks everything
 var status []*StatusEntry
 
+// loops though the checks looking for hosts
 func BuildSchedule() {
   for _,cn := range ListChecks() {
     log.Printf( "Scheduling %s", cn)
@@ -37,6 +42,7 @@ func BuildSchedule() {
   }
 }
 
+// Runs the checks
 func runner(id int, rec, done chan *StatusEntry) {
   for {
     job := <-rec
@@ -67,6 +73,7 @@ func runner(id int, rec, done chan *StatusEntry) {
   }
 }
 
+// single thead to disbatch tasks to the runners
 func disbatcher(send chan *StatusEntry) {
   for {
     sentJob := false
@@ -102,6 +109,8 @@ func disbatcher(send chan *StatusEntry) {
   }
 }
 
+// this does the clean up when the runner is done, and resubmits the job 
+// to the runqueue
 func receiver(r chan *StatusEntry) {
   for {
     job := <-r
@@ -118,6 +127,7 @@ func receiver(r chan *StatusEntry) {
   }
 }
 
+// Starts up the scheduler, and workers
 func StartSchedule(work int) {
   var disbatchQ = make( chan *StatusEntry)
   var returnQ = make( chan *StatusEntry)
@@ -130,6 +140,7 @@ func StartSchedule(work int) {
   go receiver(returnQ)
 }
 
+// prints the schedule not preaty but it's debugging
 func DumpSchedule() {
   for i:=range status {
     log.Printf( "%s[%s] - Last:%s(Exit:%d) Next:%s ",
