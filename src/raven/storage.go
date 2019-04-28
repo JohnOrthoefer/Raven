@@ -15,7 +15,7 @@ type HostEntry struct {
 
 type CheckEntry struct {
   DisplayName string
-  CheckF      func( h HostEntry, p map[string]string)
+  CheckF      func( HostEntry, map[string]string) (int, []string)
   CheckN      string
   Interval    [4]time.Duration
   Hosts       []string
@@ -63,10 +63,9 @@ func newCheck( n string, kv map[string]string) *CheckEntry {
 
   // set up the run intervals
   t,_ := time.ParseDuration( "30s")
-  r.Interval[0] = t
-  r.Interval[1] = t
-  r.Interval[2] = t
-  r.Interval[3] = t
+  for i:= range r.Interval {
+    r.Interval[i] = t
+  }
   re := regexp.MustCompile( `\s+`)
   k:=getEntry(kv, "interval")
   inter := re.Split( k, -1)
