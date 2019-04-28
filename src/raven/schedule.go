@@ -44,7 +44,7 @@ func runner(id int, rec, done chan *StatusEntry) {
   for {
     job := <-rec
     log.Printf( "worker %d, got Job %s(%s)", id, job.Host.DisplayName,job.Check.DisplayName)
-    job.ExitCode,_ = Ping( *job.Host, job.Check.Options)
+    job.ExitCode,_ = job.Check.CheckF( *job.Host, job.Check.Options)
     done<-job
   }
 }

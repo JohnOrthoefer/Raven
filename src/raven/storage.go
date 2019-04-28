@@ -15,7 +15,7 @@ type HostEntry struct {
 
 type CheckEntry struct {
   DisplayName string
-  CheckF      func( HostEntry, map[string]string) (int, []string)
+  CheckF      func( HostEntry, map[string]string) (int, [3]string)
   CheckN      string
   Interval    [4]time.Duration
   Hosts       []string
@@ -59,6 +59,7 @@ func newCheck( n string, kv map[string]string) *CheckEntry {
   r := new( CheckEntry)
   r.DisplayName = n
   // Check function that will be run
+  r.CheckF = Ping
   r.CheckN = getEntry( kv, "checkwith")
 
   // set up the run intervals
