@@ -4,23 +4,9 @@ import (
   "time"
   "log"
   "regexp"
+  ."./ravenTypes"
+  ."./ravenChecks"
 )
-
-type HostEntry struct {
-  IPv4        string
-  Hostname    string
-  DisplayName string
-  Group       string
-}
-
-type CheckEntry struct {
-  DisplayName string
-  CheckF      func( HostEntry, map[string]string) (int, [3]string)
-  CheckN      string
-  Interval    [4]time.Duration
-  Hosts       []string
-  Options     map[string]string
-}
 
 var hosts map[string]*HostEntry
 var checks map[string]*CheckEntry
@@ -64,8 +50,8 @@ func newCheck( n string, kv map[string]string) *CheckEntry {
   r := new( CheckEntry)
   r.DisplayName = n
   // Check function that will be run
-  r.CheckF = Fping
   r.CheckN = getEntry( kv, "checkwith")
+  r.CheckF = CheckFunc[r.CheckN]
 
   // set up the run intervals
   t,_ := time.ParseDuration( "30s")
