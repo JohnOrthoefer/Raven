@@ -57,7 +57,7 @@ func disbatcher(send chan *StatusEntry) {
         sentJob = true
         this.Queued = true
         log.Printf( "Disbatching %s(%s)",
-          this.Host.DisplayName,this.Check.CheckN)
+          this.Host.DisplayName,this.Check.DisplayName)
         send <- this
       }
     }
@@ -92,7 +92,7 @@ func receiver(r chan *StatusEntry) {
     job.Next = job.Last.Add( job.Check.Interval[job.Return.Exit]).
       Add(time.Duration(rand.Intn(10)-5) * time.Second)
     log.Printf( "Rescheduling %s(%s) in %s Exit: %d",
-      job.Host.DisplayName,job.Check.CheckN,
+      job.Host.DisplayName,job.Check.DisplayName,
       time.Until(job.Next).Round(time.Second), job.Return.Exit)
     job.Queued = false
   }

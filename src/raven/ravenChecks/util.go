@@ -1,6 +1,8 @@
 package ravenChecks
 
-// ping check command
+// utllites 
+// Run External
+// Return ops
 
 import (
   "bytes"

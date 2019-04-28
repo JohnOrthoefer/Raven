@@ -47,17 +47,17 @@ func Ping( he *HostEntry, opts interface{}) *ExitReturn {
     rttAvg, _ := strconv.ParseFloat(rtt[0][3], 32)
     loss, _ := strconv.ParseInt(pls[0][1], 10, 32)
     e.Exit = 0
-    e.Text = "Fping Okay"
+    e.Text = "Ping Okay"
     e.Perf = fmt.Sprintf( "RTT Average: %f, Loss: %d", rttAvg, loss)
     e.Long = ""
   default:
     e.Exit = 3
-    e.Text = "Fping Unknown"
+    e.Text = "Ping Unknown"
     e.Perf = ""
     e.Long = ""
   }
 
-  log.Printf( "%s(Fping) exit:%d out=%s, perf=%s", he.Hostname,
+  log.Printf( "%s(Ping) exit:%d out=%s, perf=%s", he.Hostname,
     e.Exit, e.Text, e.Perf)
   return e
 }
