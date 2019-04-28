@@ -15,3 +15,5 @@ __pycache__/
 *.tar
 *.tgz
 *.tar.bz2
+
+huginn
