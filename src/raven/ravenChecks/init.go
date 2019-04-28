@@ -4,7 +4,11 @@ import (
   "../ravenTypes"
 )
 
-var CheckFunc map[string]func( ravenTypes.HostEntry, map[string]string) (int, [3]string)
+type CheckIMap map[string]ravenTypes.CheckInitType
+type CheckFMap map[string]ravenTypes.CheckFuncType
+
+var CheckInit CheckIMap
+var CheckFunc CheckFMap
 
 func init() {
 }

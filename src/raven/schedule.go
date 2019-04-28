@@ -22,9 +22,13 @@ func BuildSchedule() {
       t:=new( StatusEntry)
       t.Check = GetCheckEntry(cn)
       t.Host  = GetHostEntry(ch)
-      t.ExitCode  = 3
       t.Last  = time.Unix(0, 0)
       t.Next  = time.Now().Add(time.Duration(rand.Intn(60)) * time.Second)
+      t.Return = new( ExitReturn)
+      t.Return.Exit = 3
+      t.Return.Text = ""
+      t.Return.Perf = ""
+      t.Return.Long = ""
       status = append(status,t)
     }
   }
@@ -35,7 +39,7 @@ func runner(id int, rec, done chan *StatusEntry) {
   for {
     job := <-rec
     log.Printf( "worker %d, got Job %s(%s)", id, job.Host.DisplayName,job.Check.DisplayName)
-    job.ExitCode,_ = job.Check.CheckF( *job.Host, job.Check.Options)
+    job.Return = job.Check.CheckF( job.Host, job.Check.Options)
     done<-job
   }
 }
@@ -81,15 +85,15 @@ func disbatcher(send chan *StatusEntry) {
 func receiver(r chan *StatusEntry) {
   for {
     job := <-r
-    if job.ExitCode < 0 || job.ExitCode > 3 {
-      job.ExitCode = 3
+    if job.Return.Exit < 0 || job.Return.Exit > 3 {
+      job.Return.Exit = 3
     }
     job.Last = time.Now()
-    job.Next = job.Last.Add( job.Check.Interval[job.ExitCode]).
+    job.Next = job.Last.Add( job.Check.Interval[job.Return.Exit]).
       Add(time.Duration(rand.Intn(10)-5) * time.Second)
     log.Printf( "Rescheduling %s(%s) in %s Exit: %d",
       job.Host.DisplayName,job.Check.CheckN,
-      time.Until(job.Next).Round(time.Second), job.ExitCode)
+      time.Until(job.Next).Round(time.Second), job.Return.Exit)
     job.Queued = false
   }
 }
@@ -112,7 +116,7 @@ func DumpSchedule() {
   for i:=range status {
     log.Printf( "%s[%s] - Last:%s(Exit:%d) Next:%s ",
       status[i].Host.DisplayName, status[i].Check.CheckN,
-      status[i].Last.Truncate(0).Local(), status[i].ExitCode,
+      status[i].Last.Truncate(0).Local(), status[i].Return.Exit,
       status[i].Next.Truncate(0).Local())
   }
 }

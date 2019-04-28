@@ -7,15 +7,17 @@ import (
   "fmt"
   "regexp"
   "strconv"
-  "../ravenTypes"
+  ."../ravenTypes"
 )
 
 var rePing []*regexp.Regexp
 
 func init() {
   if CheckFunc == nil {
-    CheckFunc = make( map[string]func( ravenTypes.HostEntry, map[string]string) (int, [3]string))
+    CheckFunc = make( CheckFMap)
+    CheckInit = make( CheckIMap)
   }
+  CheckInit["ping"] = PingInit
   CheckFunc["ping"] = Ping
 
   r, _ := regexp.Compile(`(\d+\.?\d+)/(\d+\.?\d+)/(\d+\.?\d+)/(\d+\.?\d+)`)
@@ -24,8 +26,13 @@ func init() {
   rePing = append( rePing, r)
 }
 
-func Ping( he ravenTypes.HostEntry, opts map[string]string) (int, [3]string) {
-  var rtnOut  [3]string // 0 = text; 1 = perf; 2 = extended text
+func PingInit( kw Kwargs) interface{} {
+  log.Printf( "Init: %v", kw)
+  return new(interface{})
+}
+
+func Ping( he *HostEntry, opts interface{}) *ExitReturn {
+  e:=new(ExitReturn)
 
   target := he.Hostname
   if he.IPv4 != "" {
@@ -39,18 +46,19 @@ func Ping( he ravenTypes.HostEntry, opts map[string]string) (int, [3]string) {
     pls := rePing[1].FindAllStringSubmatch(output, -1)
     rttAvg, _ := strconv.ParseFloat(rtt[0][3], 32)
     loss, _ := strconv.ParseInt(pls[0][1], 10, 32)
-    rtnOut[0] = "Ping Okay"
-    rtnOut[1] = fmt.Sprintf( "RTT Average: %f, Loss: %d", rttAvg, loss)
-    rtnOut[2] = ""
+    e.Exit = 0
+    e.Text = "Fping Okay"
+    e.Perf = fmt.Sprintf( "RTT Average: %f, Loss: %d", rttAvg, loss)
+    e.Long = ""
   default:
-    rtnExit = 3
-    rtnOut[0] = "Ping Unknown"
-    rtnOut[1] = ""
-    rtnOut[2] = ""
+    e.Exit = 3
+    e.Text = "Fping Unknown"
+    e.Perf = ""
+    e.Long = ""
   }
 
-  log.Printf( "%s(Ping) exit:%d out=%s, perf=%s", he.Hostname,
-    rtnExit, rtnOut[0], rtnOut[1])
-  return rtnExit, rtnOut
+  log.Printf( "%s(Fping) exit:%d out=%s, perf=%s", he.Hostname,
+    e.Exit, e.Text, e.Perf)
+  return e
 }
 

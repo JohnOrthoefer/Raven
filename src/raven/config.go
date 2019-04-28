@@ -5,8 +5,10 @@ import (
   "log"
 )
 
-func makeMap( s *ini.Section) map[string]string {
-  r:=make(map[string]string)
+type stringMap map[string]string
+
+func makeMap( s *ini.Section) stringMap {
+  r:=make(stringMap)
   for _,key := range s.Keys() {
     n := key.Name()
     v,_ := s.GetValue(n)

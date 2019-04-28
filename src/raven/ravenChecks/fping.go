@@ -6,15 +6,17 @@ import (
   "fmt"
   "regexp"
   "strconv"
-  "../ravenTypes"
+  ."../ravenTypes"
 )
 
 var reFping []*regexp.Regexp
 
 func init() {
   if CheckFunc == nil {
-    CheckFunc = make( map[string]func( ravenTypes.HostEntry, map[string]string) (int, [3]string))
+    CheckFunc = make( CheckFMap)
+    CheckInit = make( CheckIMap)
   }
+  CheckInit["fping"] = FpingInit
   CheckFunc["fping"] = Fping
   r, _ := regexp.Compile(`min/avg/max = (\d+\.?\d+)/(\d+\.?\d+)/(\d+\.?\d+)`)
   reFping = append( reFping, r)
@@ -22,8 +24,13 @@ func init() {
   reFping = append( reFping, r)
 }
 
-func Fping( he ravenTypes.HostEntry, opts map[string]string) (int, [3]string) {
-  var rtnOut  [3]string // 0 = text; 1 = perf; 2 = extended text
+func FpingInit( kw Kwargs) interface{} {
+  log.Printf( "Init: %v", kw)
+  return new(interface{})
+}
+
+func Fping( he *HostEntry, opts interface{}) *ExitReturn {
+  e:=new(ExitReturn)
 
   target := he.Hostname
   if he.IPv4 != "" {
@@ -31,27 +38,24 @@ func Fping( he ravenTypes.HostEntry, opts map[string]string) (int, [3]string) {
   }
   rtnExit, output := runExternal( "/usr/bin/fping", "-c", "8", target)
 
-  //log.Printf( "Exit:%d Output:%s", rtnExit, output)
   switch rtnExit {
   case 0:
     rtt := reFping[0].FindAllStringSubmatch(output, -1)
     pls := reFping[1].FindAllStringSubmatch(output, -1)
-    //log.Printf( "rtt:%v", rtt)
-    //log.Printf( "pls:%v", pls)
     rttAvg, _ := strconv.ParseFloat(rtt[0][3], 32)
     loss, _ := strconv.ParseInt(pls[0][1], 10, 32)
-    rtnOut[0] = "Fping Okay"
-    rtnOut[1] = fmt.Sprintf( "RTT Average: %f, Loss: %d", rttAvg, loss)
-    rtnOut[2] = ""
+    e.Exit = 0
+    e.Text = "Fping Okay"
+    e.Perf = fmt.Sprintf( "RTT Average: %f, Loss: %d", rttAvg, loss)
+    e.Long = ""
   default:
-    rtnExit = 3
-    rtnOut[0] = "Fping Unknown"
-    rtnOut[1] = ""
-    rtnOut[2] = ""
+    e.Exit = 3
+    e.Text = "Fping Unknown"
+    e.Perf = ""
+    e.Long = ""
   }
 
   log.Printf( "%s(Fping) exit:%d out=%s, perf=%s", he.Hostname,
-    rtnExit, rtnOut[0], rtnOut[1])
-  return rtnExit, rtnOut
+    e.Exit, e.Text, e.Perf)
+  return e
 }
-

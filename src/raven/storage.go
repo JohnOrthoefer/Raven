@@ -8,12 +8,14 @@ import (
   ."./ravenChecks"
 )
 
-var hosts map[string]*HostEntry
-var checks map[string]*CheckEntry
+type hostMap map[string]*HostEntry
+type checkMap map[string]*CheckEntry
+var hosts hostMap
+var checks checkMap
 
 func init() {
-  hosts = make( map[string]*HostEntry)
-  checks = make( map[string]*CheckEntry)
+  hosts = make( hostMap)
+  checks = make( checkMap)
 }
 
 func contains( v string, s []string) bool {
@@ -30,14 +32,14 @@ func isHost( h string) bool {
   return ok
 }
 
-func getEntry( kv map[string]string, n string) string {
+func getEntry( kv Kwargs, n string) string {
   if v,ok := kv[n]; ok {
     return v
   }
   return ""
 }
 
-func newHost( n string, kv map[string]string) *HostEntry {
+func newHost( n string, kv Kwargs) *HostEntry {
   r := new( HostEntry)
   r.DisplayName = n
   r.IPv4 = getEntry( kv, "ipv4")
@@ -46,7 +48,7 @@ func newHost( n string, kv map[string]string) *HostEntry {
   return r
 }
 
-func newCheck( n string, kv map[string]string) *CheckEntry {
+func newCheck( n string, kv Kwargs) *CheckEntry {
   r := new( CheckEntry)
   r.DisplayName = n
   // Check function that will be run
@@ -76,12 +78,14 @@ func newCheck( n string, kv map[string]string) *CheckEntry {
 
   // move anything else random (which will be used by the check command 
   // into basically a kwargs structure
-  r.Options = make( map[string]string)
+  Options := make( Kwargs)
   for k,v := range kv {
     if !contains( k, []string{"checkwith", "interval", "hosts"}) {
-      r.Options[k] = v
+      Options[k] = v
     }
   }
+
+  r.Options = CheckInit[r.CheckN]( Options)
   return r
 }
 
