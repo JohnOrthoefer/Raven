@@ -1,4 +1,4 @@
-package raven
+package ravenChecks
 
 // ping check command
 

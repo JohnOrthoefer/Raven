@@ -1,24 +1,28 @@
-package raven
+package ravenChecks
 
 // ping check command
-
 import (
   "log"
   "fmt"
   "regexp"
   "strconv"
+  "../ravenTypes"
 )
 
 var reFping []*regexp.Regexp
 
 func init() {
+  if CheckFunc == nil {
+    CheckFunc = make( map[string]func( ravenTypes.HostEntry, map[string]string) (int, [3]string))
+  }
+  CheckFunc["fping"] = Fping
   r, _ := regexp.Compile(`min/avg/max = (\d+\.?\d+)/(\d+\.?\d+)/(\d+\.?\d+)`)
   reFping = append( reFping, r)
   r, _ = regexp.Compile(`xmt/rcv/\%loss = (\d+)/(\d+)/(\d+)\%,`)
   reFping = append( reFping, r)
 }
 
-func Fping( he HostEntry, opts map[string]string) (int, [3]string) {
+func Fping( he ravenTypes.HostEntry, opts map[string]string) (int, [3]string) {
   var rtnOut  [3]string // 0 = text; 1 = perf; 2 = extended text
 
   target := he.Hostname
