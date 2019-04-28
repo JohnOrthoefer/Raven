@@ -25,6 +25,11 @@ type CheckEntry struct {
 var hosts map[string]*HostEntry
 var checks map[string]*CheckEntry
 
+func init() {
+  hosts = make( map[string]*HostEntry)
+  checks = make( map[string]*CheckEntry)
+}
+
 func contains( v string, s []string) bool {
   for _,i := range s {
     if i == v {
@@ -59,7 +64,7 @@ func newCheck( n string, kv map[string]string) *CheckEntry {
   r := new( CheckEntry)
   r.DisplayName = n
   // Check function that will be run
-  r.CheckF = Ping
+  r.CheckF = Fping
   r.CheckN = getEntry( kv, "checkwith")
 
   // set up the run intervals
@@ -95,13 +100,6 @@ func newCheck( n string, kv map[string]string) *CheckEntry {
 }
 
 func AddEntry( n string, kv map[string]string) {
-  if hosts == nil {
-    hosts = make( map[string]*HostEntry)
-  }
-  if checks == nil {
-    checks = make( map[string]*CheckEntry)
-  }
-
   if _,ok := kv["hostname"]; ok {
     hosts[n] = newHost(n, kv)
   } else if _,ok := kv["checkwith"]; ok {
