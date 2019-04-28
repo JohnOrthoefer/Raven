@@ -16,6 +16,7 @@ func runExternal( prog string, args ...string) (int, string) {
   cmd := exec.Command(prog, args...)
 
   cmd.Stdout = &out
+  cmd.Stderr = &out
   if err := cmd.Start(); err != nil {
     log.Fatalf("cmd.Start: %v")
   }

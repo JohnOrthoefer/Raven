@@ -21,7 +21,11 @@ func init() {
 func Ping( he HostEntry, opts map[string]string) (int, [3]string) {
   var rtnOut  [3]string // 0 = text; 1 = perf; 2 = extended text
 
-  rtnExit, output := runExternal( "/usr/bin/ping", "-c", "5", he.Hostname)
+  target := he.Hostname
+  if he.IPv4 != "" {
+    target = he.IPv4
+  }
+  rtnExit, output := runExternal( "/usr/bin/ping", "-c", "8", target)
 
   switch rtnExit {
   case 0:
