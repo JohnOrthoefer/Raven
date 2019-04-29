@@ -18,7 +18,7 @@
       </tr>
     </thead>
     <tbody>
-      {{ range . }}
+      {{ range .Data }}
         {{ if (eq .Exit 0) }}
           <tr class="bg-success text-white">
         {{ end }}

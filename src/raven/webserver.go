@@ -21,6 +21,10 @@ type TemplateConfig struct {
   TemplateLayoutPath  string
   TemplateIncludePath string
 }
+type DataType struct {
+  Now string
+  Data interface{}
+}
 var mainTmpl = `{{define "main" }} {{ template "base" . }} {{ end }}`
 var templateConfig TemplateConfig
 
@@ -117,11 +121,14 @@ func renderTemplate(w http.ResponseWriter, name string, data interface{}) {
 
   w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-  err := tmpl.Execute(w, data)
+  d := DataType {
+    Now: time.Now().Format(time.UnixDate),
+    Data: data,
+  }
+  err := tmpl.Execute(w, d)
   if err != nil {
     http.Error(w, err.Error(), http.StatusInternalServerError)
   }
-
 }
 
 func webStatus(w http.ResponseWriter, r *http.Request) {
