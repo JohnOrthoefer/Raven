@@ -57,10 +57,16 @@ func getStatus() []statusOutput {
     t.Lastrun   = stat.Last.Format(time.UnixDate)
     t.NextrunUx = stat.Next.Unix()
     t.Nextrun   = stat.Next.Format(time.UnixDate)
-    t.Exit      = stat.Return.Exit
-    t.Output    = stat.Return.Text
-    t.Perf      = stat.Return.Perf
-    t.Text      = stat.Return.Long
+    t.LastChgUx = stat.Change.Unix()
+    t.LastChg   = stat.Change.Format(time.UnixDate)
+    r := stat.Return
+    if r == nil {
+      r = stat.OldRtn
+    } 
+    t.Exit      = r.Exit
+    t.Output    = r.Text
+    t.Perf      = r.Perf
+    t.Text      = r.Long
     rtn         = append( rtn, t)
   }
   return rtn

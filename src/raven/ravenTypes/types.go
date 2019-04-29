@@ -38,5 +38,9 @@ type StatusEntry struct {
   Queued    bool
   Next      time.Time
   Last      time.Time
+  Change    time.Time
+  Count     int
+  Threshold int
+  OldRtn    *ExitReturn
   Return    *ExitReturn
 }
