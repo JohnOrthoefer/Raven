@@ -2,7 +2,7 @@
 Home Network Monitoring 
 
 ## Introduction
-This is a rewrite of my prototype Kassandra, which was written in Python.  When I showed it to MarkLlama he suggest GoLang, and a name change, since Cassandra is Distrubuted Database from Apache.  So thinking about it and liking to name things after mythological stuff, I decided on Raven.  Odin had a pair of Ravens (Huginn/Thought and Muninn/Memory) which worked as agents for him.  
+This is a rewrite of my prototype Kassandra, which was written in Python.  When I showed it to [MarkLlama](https://github.com/markllama), he suggest GoLang, and a name change, since Cassandra is Distrubuted Database from Apache.  So thinking about it and liking to name things after mythological stuff, I decided on Raven.  Odin has a pair of [Ravens](https://en.wikipedia.org/wiki/Huginn_and_Muninn) which worked as agents for him.  
 
 So the last week or so I've been working on getitng the parts working in Go.  The structure is still basically the same.
 
