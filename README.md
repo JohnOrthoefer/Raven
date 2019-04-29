@@ -11,7 +11,7 @@ So the last week or so I've been working on getitng the parts working in Go.  Th
   * Checks MUST HAVE a 'checkwith' key
   * Hosts MUST HAVE a 'hostname' key
 * Hosts are now associated with Checks
-* Hosts are not now able to "modify" a check
+* Hosts are not able to *modify* a check
   * if you want two checks that do almost the same thing, it's two checks.  
   * this was done to emulate how Nagios does things.  But after turning up a bunch of nagios checks in Kassandra, I decided for a home deplyoment it wasn't need.
 
