@@ -100,8 +100,8 @@ func receiver(r chan *StatusEntry) {
 
 // Starts up the scheduler, and workers
 func StartSchedule(work int) {
-  var disbatchQ = make( chan *StatusEntry)
-  var returnQ = make( chan *StatusEntry)
+  var disbatchQ = make( chan *StatusEntry, work)
+  var returnQ = make( chan *StatusEntry, work)
 
   for i:=0; i < work; i++ {
     log.Printf( "Starting runner %d", i)

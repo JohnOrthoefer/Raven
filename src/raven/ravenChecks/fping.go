@@ -35,13 +35,13 @@ func init() {
 func FpingInit( kw Kwargs) interface{} {
   var r interface{}
   rtn := new( fPingOpts)
-  log.Printf( "Init: %v", kw)
+  //log.Printf( "Init: %v", kw)
   rtn.rttWarn = kw.GetKwargFloat( "rtt_warn", 20.0)
   rtn.lossWarn = kw.GetKwargInt( "loss_warn", 20)
   rtn.rttCrit = kw.GetKwargFloat( "rtt_crit", 30.0)
   rtn.lossCrit = kw.GetKwargInt( "loss_crit", 40)
   rtn.count = kw.GetKwargStr( "count", "5")
-  log.Printf( "Fpin interface: %v", rtn)
+  //log.Printf( "Fpin interface: %v", rtn)
   r = rtn
   return r
 }

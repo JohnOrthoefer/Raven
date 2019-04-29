@@ -22,8 +22,8 @@ func main() {
   log.Printf( "Workers: %d", *workers)
   raven.ReadConfig( *configFile)
   raven.BuildSchedule()
-  raven.DumpStorage()
-  raven.DumpSchedule()
+  //raven.DumpStorage()
+  //raven.DumpSchedule()
   raven.StartSchedule( *workers)
   raven.StartWebserver(*webPort)
   <-done
