@@ -8,8 +8,8 @@ So the last week or so I've been working on getitng the parts working in Go.  Th
 
 ## Changes
 * The ini file now does not use type specifiers for the sections.  They are implied by the type of data in it.
-  * Checks MUST HAVE a 'checkwith' key
-  * Hosts MUST HAVE a 'hostname' key
+  * Checks **MUST** have a `checkwith` key
+  * Hosts **MUST** have a `hostname` key
 * Hosts are now associated with Checks
 * Hosts are not able to *modify* a check
   * if you want two checks that do almost the same thing, it's two checks.  
