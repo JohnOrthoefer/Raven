@@ -16,10 +16,18 @@ So the last week or so I've been working on getitng the parts working in Go.  Th
   * this was done to emulate how Nagios does things.  But after turning up a bunch of nagios checks in Kassandra, I decided for a home deplyoment it wasn't need.
 
 ## To Do
-* IPv6 - I have IPv6 to monitor so this will happen
-* Finish the built-in Ping check (although it uses the external Ping Command, so the check doesn't have to be run as root.)
-* Implement calling Nagios Checks
-* Implement calling Nagios Checks via SSH (for remote machines)
-* Implement SNMP checks 
-* Add a logs pages with a circular buffer 
+* **Configuration**
+  * Add IPv6
+* **Check Commands**
+  * Add options to the Ping Command built-in.  
+  * Add options to the Fping Command built-in.  
+  * Implement calling Nagios Checks
+  * Implement calling Nagios Checks via SSH (for remote machines)
+  * Implement SNMP checks 
+* **Logging**
   * reduce the chattiness of the server (add log levels)
+* **WebServer**
+  * Make column sortable (DataTables.js?) 
+  * add tabs for the "Groups"?
+  * add logs visible on webserver
+  * add thread status to webserver
