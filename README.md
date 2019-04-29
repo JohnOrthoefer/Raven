@@ -20,5 +20,6 @@ So the last week or so I've been working on getitng the parts working in Go.  Th
 * Finish the built-in Ping check (although it uses the external Ping Command, so the check doesn't have to be run as root.)
 * Implement calling Nagios Checks
 * Implement calling Nagios Checks via SSH (for remote machines)
-* Implement SNMP checks
-* Add the Web Interface back 
+* Implement SNMP checks 
+* Add a logs pages with a circular buffer 
+  * reduce the chattiness of the server (add log levels)
