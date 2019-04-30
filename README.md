@@ -50,6 +50,7 @@ So the last week or so I've been working on getitng the parts working in Go.  Th
   * Implement SNMP checks 
 * **Logging**
   * reduce the chattiness of the server (add log levels)
+  * add a central "logging" command at the end of a channel, because you know channels are cool
 * **WebServer**
   * Make column sortable (DataTables.js?) 
   * add tabs for the "Groups"?
