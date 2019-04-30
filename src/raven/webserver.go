@@ -62,12 +62,20 @@ func getStatus() []statusOutput {
     r := stat.Return
     if r == nil {
       r = stat.OldRtn
-    } 
+    }
     t.Exit      = r.Exit
     t.Output    = r.Text
     t.Perf      = r.Perf
     t.Text      = r.Long
     rtn         = append( rtn, t)
+  }
+  return rtn
+}
+
+func getStatusByGroup() map[string][]statusOutput {
+  rtn := make( map[string][]statusOutput)
+  for _,ent := range getStatus() {
+    rtn[ent.Group] = append(rtn[ent.Group], ent)
   }
   return rtn
 }
@@ -137,6 +145,12 @@ func renderTemplate(w http.ResponseWriter, name string, data interface{}) {
   }
 }
 
+func tabStatus(w http.ResponseWriter, r *http.Request) {
+  data := getStatusByGroup()
+  renderTemplate(w, "tabstatus.tmpl", data)
+}
+
+
 func webStatus(w http.ResponseWriter, r *http.Request) {
   data := getStatus()
   renderTemplate(w, "status.tmpl", data)
@@ -150,6 +164,7 @@ func StartWebserver(port string) {
 
   log.Printf( "Loading Handler /status")
   http.HandleFunc("/status", webStatus)
+  http.HandleFunc("/tabstatus", tabStatus)
   log.Printf( "Loading Handler /api/status")
   http.HandleFunc("/api/status", jsonStatus)
   log.Printf( "Webserver Starting '%s'", port)
