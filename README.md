@@ -43,8 +43,9 @@ So the last week or so I've been working on getitng the parts working in Go.  Th
   * Allow "Groups" to be monitored
   * Allow a host to be part of multiple groups?
 * **Check Commands**
-  * Add options to the Ping Command built-in.  
-  * Add options to the Fping Command built-in.  
+  * Add options to the Ping Command built-in
+  * Add options to the Fping Command built-in
+  * Maybe merge ping and Fping built-ins
   * Implement calling Nagios Checks
   * Implement calling Nagios Checks via SSH (for remote machines)
   * Implement SNMP checks 
