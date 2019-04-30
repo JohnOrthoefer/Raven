@@ -3,29 +3,30 @@ package raven
 // Scheduling bits
 
 import (
-  "log"
+  "fmt"
   "time"
   "math/rand"
-  ."./ravenTypes"
+  "./ravenTypes"
+  "./ravenLog"
 )
 
 // an array that tracks everything
-var status []*StatusEntry
+var status []*ravenTypes.StatusEntry
 
 // loops though the checks looking for hosts
 func BuildSchedule() {
   for _,cn := range ListChecks() {
-    log.Printf( "Scheduling %s", cn)
-    log.Printf( "Hosts %v", ListCheckHosts(cn))
+    ravenLog.SendError( 10, "BuildSchedule", fmt.Sprintf( "Scheduling %s", cn))
+    ravenLog.SendError( 10, "BuildSchedule", fmt.Sprintf( "Hosts %v", ListCheckHosts(cn)))
     for _,ch := range ListCheckHosts(cn) {
-      log.Printf( "-- host %s", ch)
-      t:=new( StatusEntry)
+      ravenLog.SendError( 10, "BuildSchedule", fmt.Sprintf( "-- host %s", ch))
+      t:=new( ravenTypes.StatusEntry)
       t.Check   = GetCheckEntry(cn)
       t.Host    = GetHostEntry(ch)
       t.Last    = time.Unix(0, 0)
       t.Change  = t.Last
       t.Next    = time.Now().Add(time.Duration(rand.Intn(60)) * time.Second)
-      t.Return  = new( ExitReturn)
+      t.Return  = new( ravenTypes.ExitReturn)
       t.Return.Exit = 3
       t.Return.Text = ""
       t.Return.Perf = ""
@@ -37,17 +38,18 @@ func BuildSchedule() {
 }
 
 // Runs the checks
-func runner(id int, rec, done chan *StatusEntry) {
+func runner(id int, rec, done chan *ravenTypes.StatusEntry) {
   for {
     job := <-rec
-    log.Printf( "worker %d, got Job %s(%s)", id, job.Host.DisplayName,job.Check.DisplayName)
+    ravenLog.SendMessage( 10, fmt.Sprintf( "runner-%d", id),
+      fmt.Sprintf( "got Job %s(%s)", job.Host.DisplayName,job.Check.DisplayName))
     job.Return = job.Check.CheckF( job.Host, job.Check.Options)
     done<-job
   }
 }
 
 // single thead to disbatch tasks to the runners
-func disbatcher(send chan *StatusEntry) {
+func disbatcher(send chan *ravenTypes.StatusEntry) {
   for {
     sentJob := false
     now := time.Now()
@@ -60,8 +62,8 @@ func disbatcher(send chan *StatusEntry) {
         this.Queued = true
         this.OldRtn = this.Return
         this.Return = nil
-        log.Printf( "Disbatching %s(%s)",
-          this.Host.DisplayName,this.Check.DisplayName)
+        ravenLog.SendMessage( 10, "disbatch", fmt.Sprintf( "Disbatching %s(%s)",
+          this.Host.DisplayName,this.Check.DisplayName))
         send <- this
       }
     }
@@ -78,7 +80,7 @@ func disbatcher(send chan *StatusEntry) {
         }
       }
       sleepTime := time.Until( when)
-      log.Printf( "Sleeping for %s", sleepTime.Round(time.Second))
+      ravenLog.SendMessage( 10, "disbatch", fmt.Sprintf( "Sleeping for %s", sleepTime.Round(time.Second)))
       time.Sleep( sleepTime)
     }
   }
@@ -86,7 +88,7 @@ func disbatcher(send chan *StatusEntry) {
 
 // this does the clean up when the runner is done, and resubmits the job 
 // to the runqueue
-func receiver(r chan *StatusEntry) {
+func receiver(r chan *ravenTypes.StatusEntry) {
   for {
     job := <-r
     if job.Return.Exit < 0 || job.Return.Exit > 3 {
@@ -98,20 +100,20 @@ func receiver(r chan *StatusEntry) {
     if job.OldRtn.Exit != job.Return.Exit {
      job.Change = job.Last
     }
-    log.Printf( "Rescheduling %s(%s) in %s Exit: %d",
+    ravenLog.SendMessage( 10, "receiver", fmt.Sprintf( "Rescheduling %s(%s) in %s Exit: %d",
       job.Host.DisplayName,job.Check.DisplayName,
-      time.Until(job.Next).Round(time.Second), job.Return.Exit)
+      time.Until(job.Next).Round(time.Second), job.Return.Exit))
     job.Queued = false
   }
 }
 
 // Starts up the scheduler, and workers
 func StartSchedule(work int) {
-  var disbatchQ = make( chan *StatusEntry, work)
-  var returnQ = make( chan *StatusEntry, work)
+  var disbatchQ = make( chan *ravenTypes.StatusEntry, work)
+  var returnQ = make( chan *ravenTypes.StatusEntry, work)
 
   for i:=0; i < work; i++ {
-    log.Printf( "Starting runner %d", i)
+    ravenLog.SendError( 10, "StartSchedule", fmt.Sprintf( "Starting runner %d", i))
     go runner(i, disbatchQ, returnQ)
   }
   go disbatcher(disbatchQ)
@@ -121,9 +123,9 @@ func StartSchedule(work int) {
 // prints the schedule not preaty but it's debugging
 func DumpSchedule() {
   for i:=range status {
-    log.Printf( "%s[%s] - Last:%s(Exit:%d) Next:%s ",
+    ravenLog.SendMessage( 10, "DumpSchedule", fmt.Sprintf( "%s[%s] - Last:%s(Exit:%d) Next:%s ",
       status[i].Host.DisplayName, status[i].Check.CheckN,
       status[i].Last.Truncate(0).Local(), status[i].Return.Exit,
-      status[i].Next.Truncate(0).Local())
+      status[i].Next.Truncate(0).Local()))
   }
 }

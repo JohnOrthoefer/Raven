@@ -2,15 +2,16 @@ package raven
 
 import (
   "time"
-  "log"
+  "fmt"
   "regexp"
   "strings"
-  ."./ravenTypes"
-  ."./ravenChecks"
+  "./ravenLog"
+  "./ravenTypes"
+  "./ravenChecks"
 )
 
-type hostMap map[string]*HostEntry
-type checkMap map[string]*CheckEntry
+type hostMap map[string]*ravenTypes.HostEntry
+type checkMap map[string]*ravenTypes.CheckEntry
 var hosts hostMap
 var checks checkMap
 
@@ -33,7 +34,7 @@ func isHost( h string) bool {
   return ok
 }
 
-func getEntry( kv Kwargs, n string, trim bool) string {
+func getEntry( kv ravenTypes.Kwargs, n string, trim bool) string {
   if v,ok := kv[n]; ok {
     if trim {
       return strings.TrimSpace(v)
@@ -43,8 +44,8 @@ func getEntry( kv Kwargs, n string, trim bool) string {
   return ""
 }
 
-func newHost( n string, kv Kwargs) *HostEntry {
-  r := new( HostEntry)
+func newHost( n string, kv ravenTypes.Kwargs) *ravenTypes.HostEntry {
+  r := new( ravenTypes.HostEntry)
   r.DisplayName = n
   r.IPv4 = getEntry( kv, "ipv4", true)
   r.Hostname = getEntry( kv, "hostname", true)
@@ -52,12 +53,12 @@ func newHost( n string, kv Kwargs) *HostEntry {
   return r
 }
 
-func newCheck( n string, kv Kwargs) *CheckEntry {
-  r := new( CheckEntry)
+func newCheck( n string, kv ravenTypes.Kwargs) *ravenTypes.CheckEntry {
+  r := new( ravenTypes.CheckEntry)
   r.DisplayName = n
   // Check function that will be run
   r.CheckN = getEntry( kv, "checkwith", true)
-  r.CheckF = CheckFunc[r.CheckN]
+  r.CheckF = ravenChecks.CheckFunc[r.CheckN]
 
   // set up the run intervals
   t,_ := time.ParseDuration( "30s")
@@ -71,7 +72,7 @@ func newCheck( n string, kv Kwargs) *CheckEntry {
     if t,ok := time.ParseDuration( j); ok==nil {
       r.Interval[i] = t
     } else {
-      log.Printf( "Error Parsing %s", j)
+      ravenLog.SendMessage( 10, "newCheck", fmt.Sprintf( "Error Parsing %s", j))
     }
   }
 
@@ -86,14 +87,14 @@ func newCheck( n string, kv Kwargs) *CheckEntry {
 
   // move anything else random (which will be used by the check command 
   // into basically a kwargs structure
-  Options := make( Kwargs)
+  Options := make( ravenTypes.Kwargs)
   for k,v := range kv {
     if !contains( k, []string{"checkwith", "interval", "hosts"}) {
       Options[k] = v
     }
   }
 
-  r.Options = CheckInit[r.CheckN]( Options)
+  r.Options = ravenChecks.CheckInit[r.CheckN]( Options)
   return r
 }
 
@@ -103,11 +104,11 @@ func AddEntry( n string, kv map[string]string) {
   } else if _,ok := kv["checkwith"]; ok {
     checks[n] = newCheck(n, kv)
   } else {
-    log.Printf( "Unknown Section Type %s", n)
+    ravenLog.SendMessage( 10, "AddEntry", fmt.Sprintf( "Unknown Section Type %s", n))
   }
 }
 
-func GetCheckEntry( c string) *CheckEntry {
+func GetCheckEntry( c string) *ravenTypes.CheckEntry {
   if _,ok := checks[c]; !ok {
     return nil
   }
@@ -127,7 +128,7 @@ func ListCheckHosts( c string) []string {
     var rtn []string
     for _,h:=range checks[c].Hosts {
       if !isHost(h) {
-        log.Printf( "%s, can not find %s", c, h)
+        ravenLog.SendError( 10, "ListCheckHosts", fmt.Sprintf( "%s, can not find %s", c, h))
         continue
       }
       rtn = append( rtn, h)
@@ -137,7 +138,7 @@ func ListCheckHosts( c string) []string {
   return nil
 }
 
-func GetHostEntry( c string) *HostEntry {
+func GetHostEntry( c string) *ravenTypes.HostEntry {
   if _,ok := hosts[c]; ok {
     return hosts[c]
   }
@@ -147,13 +148,13 @@ func GetHostEntry( c string) *HostEntry {
 
 func printHosts() {
   for i:= range hosts {
-    log.Printf( "hosts[%s] = %v", i, hosts[i])
+    ravenLog.SendMessage( 10, "printHosts", fmt.Sprintf( "hosts[%s] = %v", i, hosts[i]))
   }
 }
 
 func printChecks() {
   for i:= range checks {
-    log.Printf( "checks[%s] = %v", i, checks[i])
+    ravenLog.SendMessage( 10, "printChecks", fmt.Sprintf( "checks[%s] = %v", i, checks[i]))
   }
 }
 

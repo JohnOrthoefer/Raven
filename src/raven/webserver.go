@@ -5,14 +5,13 @@ package raven
 
 import (
   "log"
-//  "fmt"
+  "fmt"
   "time"
   "net/http"
   "encoding/json"
   "html/template"
   "path/filepath"
-//  "bytes"
-//  "./ravenTypes"
+  "./ravenLog"
 )
 
 var templates map[string]*template.Template
@@ -100,7 +99,7 @@ func loadTemplates() {
   if err != nil {
     log.Fatal(err)
   }
-  log.Printf( "layoutFiles: %v", layoutFiles)
+  ravenLog.SendError( 10, "loadTemplates", fmt.Sprintf( "layoutFiles: %v", layoutFiles))
 
   includeFiles, err := filepath.Glob(templateConfig.TemplateIncludePath + "*.tmpl")
   if err != nil {
@@ -123,13 +122,13 @@ func loadTemplates() {
     templates[fileName] = template.Must(templates[fileName].ParseFiles(files...))
   }
 
-  log.Println("templates loading successful")
+  ravenLog.SendError( 10, "loadTemplates", fmt.Sprintf("templates loading successful"))
 }
 
 func renderTemplate(w http.ResponseWriter, name string, data interface{}) {
   tmpl, ok := templates[name]
   if !ok {
-    log.Printf("The template %s does not exist.", name)
+    ravenLog.SendMessage( 10, "renderTemplate", fmt.Sprintf("The template %s does not exist.", name))
     return
   }
 
@@ -150,23 +149,37 @@ func tabStatus(w http.ResponseWriter, r *http.Request) {
   renderTemplate(w, "tabstatus.tmpl", data)
 }
 
-
 func webStatus(w http.ResponseWriter, r *http.Request) {
   data := getStatus()
+  for i := len(data)/2-1; i>=0; i-- {
+    opp := len(data)-1-i
+    data[i], data[opp] = data[opp], data[i]
+  }
   renderTemplate(w, "status.tmpl", data)
+}
+
+func logMessages(w http.ResponseWriter, r *http.Request) {
+  data := ravenLog.GetLog()
+  renderTemplate(w, "logs.tmpl", data)
+}
+
+func lastMessage(w http.ResponseWriter, r *http.Request) {
+  data := ravenLog.GetLastMessage()
+  renderTemplate(w, "logs.tmpl", data)
 }
 
 func StartWebserver(port string) {
 
-  log.Printf( "Loading Templates")
+  ravenLog.SendError( 10, "StartWebserver", "Loading Templates")
   loadConfiguration()
   loadTemplates()
 
-  log.Printf( "Loading Handler /status")
+  ravenLog.SendError( 10, "StartWebserver", "Loading Handler functions")
   http.HandleFunc("/status", webStatus)
   http.HandleFunc("/tabstatus", tabStatus)
-  log.Printf( "Loading Handler /api/status")
+  http.HandleFunc("/log", logMessages)
+  http.HandleFunc("/thread", lastMessage)
   http.HandleFunc("/api/status", jsonStatus)
-  log.Printf( "Webserver Starting '%s'", port)
+  ravenLog.SendError( 10, "StartWebServer", fmt.Sprintf( "Webserver Starting '%s'", port))
   log.Fatal(http.ListenAndServe(port, nil))
 }

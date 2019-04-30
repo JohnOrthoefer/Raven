@@ -1,0 +1,24 @@
+{{ define "metas" }}
+<meta http-equiv="refresh" content="15" >
+{{ end }}
+
+{{ define "endscript"}}
+{{end}}
+
+{{ define "content" }}
+   <div class="table-responsive-sm">
+    <table width="100%" class="table table-sm table-striped">
+    <thead>
+      <tr>
+        <th scope="col" class="bg-primary text-white">Message</th>
+    </thead>
+    <tbody>
+      {{ range .Data }}
+      <tr>
+        <td>{{.}}</td>
+      </tr>
+      {{end}}
+    </tbody>
+    </table>
+   </div>
+{{ end }}
