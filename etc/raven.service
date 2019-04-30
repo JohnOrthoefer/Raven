@@ -1,0 +1,13 @@
+[Unit]
+Description=Raven Monitoring Daemon
+After=network.target
+
+[Service]
+User=john
+WorkingDirectory=/home/john/src/Kassandra/bin
+ExecStart=/home/john/src/Kassandra/bin/monitord
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
