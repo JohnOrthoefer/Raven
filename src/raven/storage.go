@@ -4,6 +4,7 @@ import (
   "time"
   "log"
   "regexp"
+  "strings"
   ."./ravenTypes"
   ."./ravenChecks"
 )
@@ -32,8 +33,11 @@ func isHost( h string) bool {
   return ok
 }
 
-func getEntry( kv Kwargs, n string) string {
+func getEntry( kv Kwargs, n string, trim bool) string {
   if v,ok := kv[n]; ok {
+    if trim {
+      return strings.TrimSpace(v)
+    }
     return v
   }
   return ""
@@ -42,9 +46,9 @@ func getEntry( kv Kwargs, n string) string {
 func newHost( n string, kv Kwargs) *HostEntry {
   r := new( HostEntry)
   r.DisplayName = n
-  r.IPv4 = getEntry( kv, "ipv4")
-  r.Hostname = getEntry( kv, "hostname")
-  r.Group = getEntry( kv, "group")
+  r.IPv4 = getEntry( kv, "ipv4", true)
+  r.Hostname = getEntry( kv, "hostname", true)
+  r.Group = getEntry( kv, "group", true)
   return r
 }
 
@@ -52,7 +56,7 @@ func newCheck( n string, kv Kwargs) *CheckEntry {
   r := new( CheckEntry)
   r.DisplayName = n
   // Check function that will be run
-  r.CheckN = getEntry( kv, "checkwith")
+  r.CheckN = getEntry( kv, "checkwith", true)
   r.CheckF = CheckFunc[r.CheckN]
 
   // set up the run intervals
@@ -61,7 +65,7 @@ func newCheck( n string, kv Kwargs) *CheckEntry {
     r.Interval[i] = t
   }
   re := regexp.MustCompile( `\s+`)
-  k:=getEntry(kv, "interval")
+  k:=getEntry(kv, "interval", true)
   inter := re.Split( k, -1)
   for i,j := range inter {
     if t,ok := time.ParseDuration( j); ok==nil {
@@ -72,7 +76,11 @@ func newCheck( n string, kv Kwargs) *CheckEntry {
   }
 
   // array of hosts that use this check
-  for _,n := range re.Split( getEntry(kv, "hosts"), -1) {
+  for _,n := range re.Split( getEntry(kv, "hosts", true), -1) {
+    // dedup the hosts
+    if contains( n, r.Hosts) {
+      continue
+    }
     r.Hosts = append(r.Hosts, n)
   }
 
