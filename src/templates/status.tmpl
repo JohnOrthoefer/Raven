@@ -2,9 +2,29 @@
 <meta http-equiv="refresh" content="5" >
 {{ end }}
 
+{{ define "css" }}
+<!--
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.1/css/responsive.dataTables.min.css">
+-->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+{{ end }}
+
+{{ define "javascript" }}
+<script src="https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+{{ end }}
+
+{{ define "script" }}
+<script>
+$(document).ready( function () {
+    $('#statustable').DataTable();
+} );
+</script>
+{{ end }}
+
 {{ define "content" }}
    <div class="table-responsive-sm">
-    <table width="100%" class="table table-sm table-striped">
+    <table id="statustable" width="100%" class="table table-sm table-striped">
     <thead>
       <tr>
         <th scope="col" class="bg-primary text-white">Host</th>
