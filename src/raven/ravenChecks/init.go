@@ -12,3 +12,14 @@ var CheckFunc CheckFMap
 
 func init() {
 }
+
+func registerHandler( n string,
+                      iptr ravenTypes.CheckInitType,
+                      fptr ravenTypes.CheckFuncType) {
+  if CheckFunc == nil {
+    CheckFunc = make( CheckFMap)
+    CheckInit = make( CheckIMap)
+  }
+  CheckInit[n] = iptr
+  CheckFunc[n] = fptr
+}
