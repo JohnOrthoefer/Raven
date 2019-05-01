@@ -39,10 +39,14 @@ func BuildSchedule() {
 
 // Runs the checks
 func runner(id int, rec, done chan *ravenTypes.StatusEntry) {
+  name := fmt.Sprintf( "runner-%d", id)
   for {
+    ravenLog.SendMessage( 10, name, "Waiting...")
     job := <-rec
-    ravenLog.SendMessage( 10, fmt.Sprintf( "runner-%d", id),
-      fmt.Sprintf( "Running %s(%s)", job.Host.DisplayName,job.Check.DisplayName))
+    ravenLog.SendMessage( 10, name,
+      fmt.Sprintf( "Running %s(%s)", 
+        job.Host.DisplayName,
+        job.Check.DisplayName))
     job.Return = job.Check.CheckF( job.Host, job.Check.Options)
     done<-job
   }

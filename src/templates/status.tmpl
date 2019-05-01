@@ -12,12 +12,12 @@
       <tr>
         <th width="10%" scope="col" class="bg-primary text-white">Host</th>
         <th width="10%" scope="col" class="bg-primary text-white">Check</th>
-        <th scope="col" class="bg-primary text-white">Output<br>
-    Detail</th>
-        <th width="10%" scope="col" class="bg-primary text-white">Last Check<br>
-		Next Check</th>
-        <th width="5%" scope="col" class="bg-primary text-white">Threshold</th>
-        <th width="10%" scope="col" class="bg-primary text-white">Last Change</th>
+        <th scope="col" class="bg-primary text-white">
+          Output<br>Detail</th>
+        <th width="10%" scope="col" class="bg-primary text-white">
+          Last Check<br>Next Check</th>
+        <th width="10%" scope="col" class="bg-primary text-white">
+          Threshold<br>Last Change</th>
       </tr>
     </thead>
     <tbody>
@@ -35,12 +35,17 @@
           <tr class="bg-info text-white">
         {{ end }}
         <td> {{ .Name }} <br> <i>{{ .Group }}</i> </td>
-        <td style="font-size: 60%"> {{ .Check }} <br> {{ .Perf }}</td>
-        <td> <div style="font-size: 75%"> {{ .Output }} <br> {{ .Text }} </div></td>
+        <td style="font-size: 70%">
+          {{ .Check }}<br>{{ .Perf }}
+        </td>
+        <td> <div style="font-size: 75%">
+          {{ .Output }}<br>{{ .Text }}
+        </div></td>
         <td style="font-size: 90%"> {{ .Lastrun }} <br>
         	{{ .Nextrun }} </td>
-        <td> {{ .ChgThr }} </td>
-        <td style="font-size: 90%"> {{ .LastChg }} </td>
+        <td style="font-size:90%">
+          {{ .ChgThr }}<br>{{ .LastChg }}
+        </td>
       </tr>
       {{end}}
     </tbody>
