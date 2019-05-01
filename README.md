@@ -43,15 +43,11 @@ So the last week or so I've been working on getitng the parts working in Go.  Th
   * Allow "Groups" to be monitored
   * Allow a host to be part of multiple groups?
 * **Check Commands**
-  * Add options to the Ping Command built-in
-  * Add options to the Fping Command built-in
-  * Maybe merge ping and Fping built-ins
-  * Implement calling Nagios Checks
+  * Merge ping and Fping built-ins, Fping a config option
   * Implement calling Nagios Checks via SSH (for remote machines)
   * Implement SNMP checks 
 * **Logging**
   * reduce the chattiness of the server (add log levels)
-  * add a central "logging" command at the end of a channel, because you know channels are cool
 * **WebServer**
   * Make column sortable (DataTables.js?) 
   * add tabs for the "Groups"?
