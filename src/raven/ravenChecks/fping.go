@@ -20,6 +20,7 @@ type fPingOpts struct {
   count     string
 }
 
+
 func init() {
   registerHandler( "fping", FpingInit, Fping)
 
@@ -83,7 +84,7 @@ func Fping( he *ravenTypes.HostEntry, options interface{}) *ravenTypes.ExitRetur
     e.Long = output
   }
 
-  ravenLog.SendMessage(10, "Fping", fmt.Sprintf( "%s(Fping) exit:%d out=%s, perf=%s, long=%s", he.Hostname,
+  ravenLog.SendMessage(10, "check fping", fmt.Sprintf( "%s(Fping) exit:%d out=%s, perf=%s, long=%s", he.Hostname,
     e.Exit, e.Text, e.Perf, e.Long))
   return e
 }

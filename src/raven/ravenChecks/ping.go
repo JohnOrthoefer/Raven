@@ -84,7 +84,7 @@ func Ping( he *ravenTypes.HostEntry, options interface{}) *ravenTypes.ExitReturn
     e.Long = output
   }
 
-  ravenLog.SendMessage( 10, "ping", fmt.Sprintf( "%s(Ping) exit:%d out=%s, perf=%s", he.Hostname,
+  ravenLog.SendMessage( 10, "Check ping", fmt.Sprintf( "%s(Ping) exit:%d out=%s, perf=%s", he.Hostname,
     e.Exit, e.Text, e.Perf))
   return e
 }
