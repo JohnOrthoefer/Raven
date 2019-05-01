@@ -25,13 +25,13 @@ func BuildSchedule() {
       t.Host    = GetHostEntry(ch)
       t.Last    = time.Unix(0, 0)
       t.Change  = t.Last
+      t.CurExit = 3
       t.Next    = time.Now().Add(time.Duration(rand.Intn(60)) * time.Second)
       t.Return  = new( ravenTypes.ExitReturn)
-      t.Return.Exit = 3
-      t.Return.Text = ""
-      t.Return.Perf = ""
-      t.Return.Long = ""
-      t.OldRtn = t.Return
+      t.Return.Exit = t.CurExit
+      t.Return.Text = "No Results"
+      t.Return.Perf = "No Results"
+      t.Return.Long = "No Results"
       status = append(status,t)
     }
   }
@@ -60,8 +60,6 @@ func disbatcher(send chan *ravenTypes.StatusEntry) {
       if this.Next.Before(now) {
         sentJob = true
         this.Queued = true
-        this.OldRtn = this.Return
-        this.Return = nil
         ravenLog.SendMessage( 10, "disbatch", fmt.Sprintf( "Disbatching %s(%s)",
           this.Host.DisplayName,this.Check.DisplayName))
         send <- this
@@ -95,11 +93,21 @@ func receiver(r chan *ravenTypes.StatusEntry) {
       job.Return.Exit = 3
     }
     job.Last = time.Now()
-    job.Next = job.Last.Add( job.Check.Interval[job.Return.Exit]).
-      Add(time.Duration(rand.Intn(10)-5) * time.Second)
-    if job.OldRtn.Exit != job.Return.Exit {
-     job.Change = job.Last
+    if job.CurExit != job.Return.Exit {
+      // if it's a change
+      job.Count += 1
+      if job.Count >= job.Check.Threshold {
+        // if it's been differnet enough times
+        job.CurExit = job.Return.Exit
+        job.Change = job.Last
+        job.Count = 0
+      }
+    } else {
+      // if it's the same reset to zero
+      job.Count = 0
     }
+    job.Next = job.Last.Add( job.Check.Interval[job.CurExit]).
+      Add(time.Duration(rand.Intn(10)-5) * time.Second)
     ravenLog.SendMessage( 10, "receiver", fmt.Sprintf( "Rescheduling %s(%s) in %s Exit: %d",
       job.Host.DisplayName,job.Check.DisplayName,
       time.Until(job.Next).Round(time.Second), job.Return.Exit))

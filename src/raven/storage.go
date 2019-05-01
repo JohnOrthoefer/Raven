@@ -76,6 +76,8 @@ func newCheck( n string, kv ravenTypes.Kwargs) *ravenTypes.CheckEntry {
     }
   }
 
+  r.Threshold = int(kv.GetKwargInt( "threshold", 5))
+
   // array of hosts that use this check
   for _,n := range re.Split( getEntry(kv, "hosts", true), -1) {
     // dedup the hosts
@@ -89,7 +91,7 @@ func newCheck( n string, kv ravenTypes.Kwargs) *ravenTypes.CheckEntry {
   // into basically a kwargs structure
   Options := make( ravenTypes.Kwargs)
   for k,v := range kv {
-    if !contains( k, []string{"checkwith", "interval", "hosts"}) {
+    if !contains( k, []string{"checkwith", "interval", "hosts", "threshold"}) {
       Options[k] = v
     }
   }

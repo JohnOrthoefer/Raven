@@ -58,11 +58,9 @@ func getStatus() []statusOutput {
     t.Nextrun   = stat.Next.Format(time.Stamp)
     t.LastChgUx = stat.Change.Unix()
     t.LastChg   = stat.Change.Format(time.Stamp)
+    t.ChgThr    = fmt.Sprintf( "%d/%d", stat.Count, stat.Check.Threshold)
+    t.Exit      = stat.CurExit
     r := stat.Return
-    if r == nil {
-      r = stat.OldRtn
-    }
-    t.Exit      = r.Exit
     t.Output    = r.Text
     t.Perf      = r.Perf
     t.Text      = r.Long

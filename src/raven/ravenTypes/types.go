@@ -29,6 +29,7 @@ type CheckEntry struct {
   CheckN      string
   Interval    [4]time.Duration
   Hosts       []string
+  Threshold   int
 }
 
 // the basic entry for scheduling a check against a host
@@ -36,11 +37,10 @@ type StatusEntry struct {
   Check     *CheckEntry
   Host      *HostEntry
   Queued    bool
+  CurExit   int
+  Count     int
   Next      time.Time
   Last      time.Time
   Change    time.Time
-  Count     int
-  Threshold int
-  OldRtn    *ExitReturn
   Return    *ExitReturn
 }
