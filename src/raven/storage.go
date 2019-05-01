@@ -56,6 +56,8 @@ func newHost( n string, kv ravenTypes.Kwargs) *ravenTypes.HostEntry {
 
 func newCheck( n string, kv ravenTypes.Kwargs) *ravenTypes.CheckEntry {
   r := new( ravenTypes.CheckEntry)
+  re := regexp.MustCompile( `\s+`)
+
   r.DisplayName = n
   // Check function that will be run
   r.CheckN = getEntry( kv, "checkwith", true)
@@ -66,14 +68,14 @@ func newCheck( n string, kv ravenTypes.Kwargs) *ravenTypes.CheckEntry {
   for i:= range r.Interval {
     r.Interval[i] = t
   }
-  re := regexp.MustCompile( `\s+`)
   k:=getEntry(kv, "interval", true)
-  inter := re.Split( k, -1)
+  inter := re.Split( k, len(r.Interval))
   for i,j := range inter {
+    ravenLog.SendError( 99, "newCheck", fmt.Sprintf( "Parsing %s", j))
     if t,ok := time.ParseDuration( j); ok==nil {
       r.Interval[i] = t
     } else {
-      ravenLog.SendMessage( 10, "newCheck", fmt.Sprintf( "Error Parsing %s", j))
+      ravenLog.SendError( 10, "newCheck", fmt.Sprintf( "Error Parsing %s", j))
     }
   }
 
@@ -92,6 +94,7 @@ func newCheck( n string, kv ravenTypes.Kwargs) *ravenTypes.CheckEntry {
   // into basically a kwargs structure
   Options := make( ravenTypes.Kwargs)
   for k,v := range kv {
+    k = strings.ToLower(k)
     if !contains( k, []string{"checkwith", "interval", "hosts", "threshold"}) {
       Options[k] = v
     }

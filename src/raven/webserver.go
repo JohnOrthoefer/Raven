@@ -24,6 +24,8 @@ type DataType struct {
   Now string
   Data interface{}
 }
+type statusOutputList []statusOutput
+
 var mainTmpl = `{{define "main" }} {{ template "base" . }} {{ end }}`
 var templateConfig TemplateConfig
 
@@ -45,8 +47,8 @@ type statusOutput struct {
   Text      string    `json:"longText"`
 }
 
-func getStatus() []statusOutput {
-  var rtn []statusOutput
+func getStatus() statusOutputList {
+  var rtn statusOutputList
   for _,stat := range status {
     var t  statusOutput
     t.Name      = stat.Host.DisplayName
@@ -147,6 +149,17 @@ func tabStatus(w http.ResponseWriter, r *http.Request) {
   renderTemplate(w, "tabstatus.tmpl", data)
 }
 
+func errStatus(w http.ResponseWriter, r *http.Request) {
+  data := statusOutputList{}
+
+  for _,v := range getStatus() {
+    if v.Exit > 0 {
+      data = append(data, v)
+    }
+  }
+  renderTemplate(w, "status.tmpl", data)
+}
+
 func webStatus(w http.ResponseWriter, r *http.Request) {
   data := getStatus()
   renderTemplate(w, "status.tmpl", data)
@@ -178,6 +191,7 @@ func StartWebserver(port string) {
   loadTemplates()
 
   ravenLog.SendError( 10, "StartWebserver", "Loading Handler functions")
+  http.HandleFunc("/", errStatus)
   http.HandleFunc("/status", webStatus)
   http.HandleFunc("/tabstatus", tabStatus)
   http.HandleFunc("/log", logMessages)
