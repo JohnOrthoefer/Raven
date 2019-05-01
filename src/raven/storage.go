@@ -5,6 +5,7 @@ import (
   "fmt"
   "regexp"
   "strings"
+  "sort"
   "./ravenLog"
   "./ravenTypes"
   "./ravenChecks"
@@ -118,16 +119,17 @@ func GetCheckEntry( c string) *ravenTypes.CheckEntry {
 }
 
 func ListChecks() []string {
-  rtn:=[]string{}
+  rtn:=sort.StringSlice{}
   for n:=range checks {
     rtn = append(rtn, n)
   }
+  rtn.Sort()
   return rtn
 }
 
 func ListCheckHosts( c string) []string {
   if _,ok := checks[c]; ok {
-    var rtn []string
+    rtn:=sort.StringSlice{}
     for _,h:=range checks[c].Hosts {
       if !isHost(h) {
         ravenLog.SendError( 10, "ListCheckHosts", fmt.Sprintf( "%s, can not find %s", c, h))
@@ -135,6 +137,7 @@ func ListCheckHosts( c string) []string {
       }
       rtn = append( rtn, h)
     }
+    rtn.Sort()
     return rtn
   }
   return nil
