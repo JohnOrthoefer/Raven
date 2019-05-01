@@ -3,11 +3,11 @@ package ravenChecks
 // ping check command
 
 import (
-  "log"
   "fmt"
   "regexp"
   "strconv"
-  ."../ravenTypes"
+  "../ravenLog"
+  "../ravenTypes"
 )
 
 var rePing []*regexp.Regexp
@@ -30,7 +30,7 @@ func init() {
   rePing = append( rePing, r)
 }
 
-func PingInit( kw Kwargs) interface{} {
+func PingInit( kw ravenTypes.Kwargs) interface{} {
   var r interface{}
   rtn := new( pingOpts)
   rtn.pingProg = kw.GetKwargStr( "program", "/usr/bin/ping")
@@ -43,8 +43,8 @@ func PingInit( kw Kwargs) interface{} {
   return r
 }
 
-func Ping( he *HostEntry, options interface{}) *ExitReturn {
-  e:=new(ExitReturn)
+func Ping( he *ravenTypes.HostEntry, options interface{}) *ravenTypes.ExitReturn {
+  e:=new(ravenTypes.ExitReturn)
   opts := options.(*pingOpts)
 
   target := he.Hostname
@@ -84,8 +84,8 @@ func Ping( he *HostEntry, options interface{}) *ExitReturn {
     e.Long = output
   }
 
-  log.Printf( "%s(Ping) exit:%d out=%s, perf=%s", he.Hostname,
-    e.Exit, e.Text, e.Perf)
+  ravenLog.SendMessage( 10, "ping", fmt.Sprintf( "%s(Ping) exit:%d out=%s, perf=%s", he.Hostname,
+    e.Exit, e.Text, e.Perf))
   return e
 }
 

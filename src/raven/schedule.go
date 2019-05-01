@@ -42,7 +42,7 @@ func runner(id int, rec, done chan *ravenTypes.StatusEntry) {
   for {
     job := <-rec
     ravenLog.SendMessage( 10, fmt.Sprintf( "runner-%d", id),
-      fmt.Sprintf( "got Job %s(%s)", job.Host.DisplayName,job.Check.DisplayName))
+      fmt.Sprintf( "Running %s(%s)", job.Host.DisplayName,job.Check.DisplayName))
     job.Return = job.Check.CheckF( job.Host, job.Check.Options)
     done<-job
   }

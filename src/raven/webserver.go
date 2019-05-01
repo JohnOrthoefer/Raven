@@ -53,11 +53,11 @@ func getStatus() []statusOutput {
     t.Group     = stat.Host.Group
     t.Check     = stat.Check.DisplayName
     t.LastrunUx = stat.Last.Unix()
-    t.Lastrun   = stat.Last.Format(time.UnixDate)
+    t.Lastrun   = stat.Last.Format(time.Stamp)
     t.NextrunUx = stat.Next.Unix()
-    t.Nextrun   = stat.Next.Format(time.UnixDate)
+    t.Nextrun   = stat.Next.Format(time.Stamp)
     t.LastChgUx = stat.Change.Unix()
-    t.LastChg   = stat.Change.Format(time.UnixDate)
+    t.LastChg   = stat.Change.Format(time.Stamp)
     r := stat.Return
     if r == nil {
       r = stat.OldRtn
@@ -118,7 +118,7 @@ func loadTemplates() {
     templates[fileName], err = mainTemplate.Clone()
     if err != nil {
       log.Fatal(err)
-    } 
+    }
     templates[fileName] = template.Must(templates[fileName].ParseFiles(files...))
   }
 
@@ -151,21 +151,26 @@ func tabStatus(w http.ResponseWriter, r *http.Request) {
 
 func webStatus(w http.ResponseWriter, r *http.Request) {
   data := getStatus()
-  for i := len(data)/2-1; i>=0; i-- {
-    opp := len(data)-1-i
-    data[i], data[opp] = data[opp], data[i]
-  }
   renderTemplate(w, "status.tmpl", data)
 }
 
 func logMessages(w http.ResponseWriter, r *http.Request) {
   data := ravenLog.GetLog()
+  for i := len(data)/2-1; i>=0; i-- {
+    opp := len(data)-1-i
+    data[i], data[opp] = data[opp], data[i]
+  }
   renderTemplate(w, "logs.tmpl", data)
 }
 
 func lastMessage(w http.ResponseWriter, r *http.Request) {
   data := ravenLog.GetLastMessage()
-  renderTemplate(w, "logs.tmpl", data)
+  renderTemplate(w, "thread.tmpl", data)
+}
+
+func errMessage(w http.ResponseWriter, r *http.Request) {
+  data := ravenLog.GetErrors()
+  renderTemplate(w, "errors.tmpl", data)
 }
 
 func StartWebserver(port string) {
@@ -179,6 +184,7 @@ func StartWebserver(port string) {
   http.HandleFunc("/tabstatus", tabStatus)
   http.HandleFunc("/log", logMessages)
   http.HandleFunc("/thread", lastMessage)
+  http.HandleFunc("/startup", errMessage)
   http.HandleFunc("/api/status", jsonStatus)
   ravenLog.SendError( 10, "StartWebServer", fmt.Sprintf( "Webserver Starting '%s'", port))
   log.Fatal(http.ListenAndServe(port, nil))

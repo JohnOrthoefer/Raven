@@ -10,12 +10,16 @@
     <table width="100%" class="table table-sm table-striped">
     <thead>
       <tr>
-        <th scope="col" class="bg-primary text-white">Message</th>
+        <th width="15%" scope="col" class="bg-primary text-white">Time</th>
+        <th width="15%" scope="col" class="bg-primary text-white">From</th>
+        <th width="70%" scope="col" class="bg-primary text-white">Message</th>
     </thead>
     <tbody>
       {{ range .Data }}
       <tr>
-        <td>{{.}}</td>
+        <td>{{.When}}</td>
+        <td>{{.Who}}</td>
+        <td>{{.Msg}}</td>
       </tr>
       {{end}}
     </tbody>

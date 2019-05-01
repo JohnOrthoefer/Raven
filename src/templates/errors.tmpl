@@ -1,5 +1,5 @@
 {{ define "metas" }}
-<meta http-equiv="refresh" content="2" >
+<meta http-equiv="refresh" content="15" >
 {{ end }}
 
 {{ define "endscript"}}
@@ -10,15 +10,15 @@
     <table width="100%" class="table table-sm table-striped">
     <thead>
       <tr>
-        <th width="15%" scope="col" class="bg-primary text-white">Routine</th>
-        <th width="15%" scope="col" class="bg-primary text-white">When</th>
+        <th width="15%" scope="col" class="bg-primary text-white">Time</th>
+        <th width="15%" scope="col" class="bg-primary text-white">Service</th>
         <th width="70%" scope="col" class="bg-primary text-white">Message</th>
     </thead>
     <tbody>
       {{ range .Data }}
       <tr>
-        <td>{{.Who}}</td>
         <td>{{.When}}</td>
+        <td>{{.Who}}</td>
         <td>{{.Msg}}</td>
       </tr>
       {{end}}
