@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.70 scan initiated Fri May  3 09:09:52 2019 as: nmap -oX scan.xml -oG scan.txt -p 22,23,25,80,123,161,162,443 172.17.2.0/24 -->
+<nmaprun scanner="nmap" args="nmap -oX scan.xml -oG scan.txt -p 22,23,25,80,123,161,162,443 172.17.2.0/24" start="1556888992" startstr="Fri May  3 09:09:52 2019" version="7.70" xmloutputversion="1.04">
+<scaninfo type="connect" protocol="tcp" numservices="8" services="22-23,25,80,123,161-162,443"/>
+<verbose level="0"/>
+<debugging level="0"/>
+<host starttime="1556888992" endtime="1556888995"><status state="up" reason="syn-ack" reason_ttl="0"/>
+<address addr="172.17.2.18" addrtype="ipv4"/>
+<hostnames>
+<hostname name="sw-office.orthoefer.org" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="23"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="telnet" method="table" conf="3"/></port>
+<port protocol="tcp" portid="25"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="smtp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="123"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ntp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="161"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="162"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmptrap" method="table" conf="3"/></port>
+<port protocol="tcp" portid="443"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="https" method="table" conf="3"/></port>
+</ports>
+<times srtt="14138" rttvar="7568" to="100000"/>
+</host>
+<host starttime="1556888992" endtime="1556888995"><status state="up" reason="syn-ack" reason_ttl="0"/>
+<address addr="172.17.2.25" addrtype="ipv4"/>
+<hostnames>
+<hostname name="cam3.orthoefer.org" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="23"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="telnet" method="table" conf="3"/></port>
+<port protocol="tcp" portid="25"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="smtp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="123"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ntp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="161"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="162"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmptrap" method="table" conf="3"/></port>
+<port protocol="tcp" portid="443"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="https" method="table" conf="3"/></port>
+</ports>
+<times srtt="7014" rttvar="5360" to="100000"/>
+</host>
+<host starttime="1556888992" endtime="1556888995"><status state="up" reason="syn-ack" reason_ttl="0"/>
+<address addr="172.17.2.32" addrtype="ipv4"/>
+<hostnames>
+<hostname name="nvr.orthoefer.org" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="23"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="telnet" method="table" conf="3"/></port>
+<port protocol="tcp" portid="25"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="smtp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="123"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ntp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="161"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="162"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmptrap" method="table" conf="3"/></port>
+<port protocol="tcp" portid="443"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="https" method="table" conf="3"/></port>
+</ports>
+<times srtt="2226" rttvar="2360" to="100000"/>
+</host>
+<host starttime="1556888992" endtime="1556888995"><status state="up" reason="conn-refused" reason_ttl="0"/>
+<address addr="172.17.2.36" addrtype="ipv4"/>
+<hostnames>
+<hostname name="Ariel.orthoefer.org" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="23"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="telnet" method="table" conf="3"/></port>
+<port protocol="tcp" portid="25"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="smtp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="80"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="123"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ntp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="161"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="162"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmptrap" method="table" conf="3"/></port>
+<port protocol="tcp" portid="443"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="https" method="table" conf="3"/></port>
+</ports>
+<times srtt="2135" rttvar="2585" to="100000"/>
+</host>
+<host starttime="1556888992" endtime="1556888995"><status state="up" reason="syn-ack" reason_ttl="0"/>
+<address addr="172.17.2.37" addrtype="ipv4"/>
+<hostnames>
+<hostname name="sw-LivingRm.Orthoefer.org" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="23"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="telnet" method="table" conf="3"/></port>
+<port protocol="tcp" portid="25"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="smtp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="123"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ntp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="161"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="162"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmptrap" method="table" conf="3"/></port>
+<port protocol="tcp" portid="443"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="https" method="table" conf="3"/></port>
+</ports>
+<times srtt="8867" rttvar="3226" to="100000"/>
+</host>
+<host starttime="1556888992" endtime="1556888995"><status state="up" reason="conn-refused" reason_ttl="0"/>
+<address addr="172.17.2.38" addrtype="ipv4"/>
+<hostnames>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="23"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="telnet" method="table" conf="3"/></port>
+<port protocol="tcp" portid="25"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="smtp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="80"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="123"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ntp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="161"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="162"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmptrap" method="table" conf="3"/></port>
+<port protocol="tcp" portid="443"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="https" method="table" conf="3"/></port>
+</ports>
+<times srtt="3232" rttvar="2151" to="100000"/>
+</host>
+<host starttime="1556888992" endtime="1556888995"><status state="up" reason="syn-ack" reason_ttl="0"/>
+<address addr="172.17.2.41" addrtype="ipv4"/>
+<hostnames>
+<hostname name="sw-kitchen.orthoefer.org" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="23"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="telnet" method="table" conf="3"/></port>
+<port protocol="tcp" portid="25"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="smtp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="123"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ntp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="161"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="162"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmptrap" method="table" conf="3"/></port>
+<port protocol="tcp" portid="443"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="https" method="table" conf="3"/></port>
+</ports>
+<times srtt="5649" rttvar="1466" to="100000"/>
+</host>
+<host starttime="1556888992" endtime="1556888995"><status state="up" reason="conn-refused" reason_ttl="0"/>
+<address addr="172.17.2.42" addrtype="ipv4"/>
+<hostnames>
+<hostname name="Giselle.orthoefer.org" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="23"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="telnet" method="table" conf="3"/></port>
+<port protocol="tcp" portid="25"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="smtp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="80"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="123"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ntp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="161"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="162"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmptrap" method="table" conf="3"/></port>
+<port protocol="tcp" portid="443"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="https" method="table" conf="3"/></port>
+</ports>
+<times srtt="2418" rttvar="2268" to="100000"/>
+</host>
+<host starttime="1556888992" endtime="1556888995"><status state="up" reason="syn-ack" reason_ttl="0"/>
+<address addr="172.17.2.64" addrtype="ipv4"/>
+<hostnames>
+<hostname name="vpn.orthoefer.org" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="23"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="telnet" method="table" conf="3"/></port>
+<port protocol="tcp" portid="25"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="smtp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="123"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ntp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="161"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="162"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmptrap" method="table" conf="3"/></port>
+<port protocol="tcp" portid="443"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="https" method="table" conf="3"/></port>
+</ports>
+<times srtt="2841" rttvar="1746" to="100000"/>
+</host>
+<host starttime="1556888992" endtime="1556888995"><status state="up" reason="conn-refused" reason_ttl="0"/>
+<address addr="172.17.2.113" addrtype="ipv4"/>
+<hostnames>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="23"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="telnet" method="table" conf="3"/></port>
+<port protocol="tcp" portid="25"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="smtp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="80"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="123"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ntp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="161"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="162"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmptrap" method="table" conf="3"/></port>
+<port protocol="tcp" portid="443"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="https" method="table" conf="3"/></port>
+</ports>
+<times srtt="44824" rttvar="37608" to="195256"/>
+</host>
+<host starttime="1556888992" endtime="1556888995"><status state="up" reason="conn-refused" reason_ttl="0"/>
+<address addr="172.17.2.114" addrtype="ipv4"/>
+<hostnames>
+<hostname name="kara" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="23"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="telnet" method="table" conf="3"/></port>
+<port protocol="tcp" portid="25"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="smtp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="80"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="123"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ntp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="161"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="162"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmptrap" method="table" conf="3"/></port>
+<port protocol="tcp" portid="443"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="https" method="table" conf="3"/></port>
+</ports>
+<times srtt="2968" rttvar="1745" to="100000"/>
+</host>
+<host starttime="1556888992" endtime="1556888995"><status state="up" reason="syn-ack" reason_ttl="0"/>
+<address addr="172.17.2.146" addrtype="ipv4"/>
+<hostnames>
+<hostname name="HP8A32AE.Orthoefer.org" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="23"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="telnet" method="table" conf="3"/></port>
+<port protocol="tcp" portid="25"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="smtp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="123"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ntp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="161"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="162"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmptrap" method="table" conf="3"/></port>
+<port protocol="tcp" portid="443"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="https" method="table" conf="3"/></port>
+</ports>
+<times srtt="4235" rttvar="1522" to="100000"/>
+</host>
+<host starttime="1556888992" endtime="1556888995"><status state="up" reason="syn-ack" reason_ttl="0"/>
+<address addr="172.17.2.182" addrtype="ipv4"/>
+<hostnames>
+<hostname name="AirCam.Orthoefer.org" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="23"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="telnet" method="table" conf="3"/></port>
+<port protocol="tcp" portid="25"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="smtp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="123"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ntp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="161"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="162"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmptrap" method="table" conf="3"/></port>
+<port protocol="tcp" portid="443"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="https" method="table" conf="3"/></port>
+</ports>
+<times srtt="5225" rttvar="1827" to="100000"/>
+</host>
+<host starttime="1556888992" endtime="1556888995"><status state="up" reason="conn-refused" reason_ttl="0"/>
+<address addr="172.17.2.185" addrtype="ipv4"/>
+<hostnames>
+<hostname name="animalkingdom.Orthoefer.org" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="23"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="telnet" method="table" conf="3"/></port>
+<port protocol="tcp" portid="25"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="smtp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="80"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="123"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ntp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="161"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="162"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmptrap" method="table" conf="3"/></port>
+<port protocol="tcp" portid="443"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="https" method="table" conf="3"/></port>
+</ports>
+<times srtt="2301" rttvar="2403" to="100000"/>
+</host>
+<host starttime="1556888992" endtime="1556888995"><status state="up" reason="syn-ack" reason_ttl="0"/>
+<address addr="172.17.2.208" addrtype="ipv4"/>
+<hostnames>
+<hostname name="SallyCarrera.Orthoefer.org" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="23"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="telnet" method="table" conf="3"/></port>
+<port protocol="tcp" portid="25"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="smtp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="123"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ntp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="161"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="162"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmptrap" method="table" conf="3"/></port>
+<port protocol="tcp" portid="443"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="https" method="table" conf="3"/></port>
+</ports>
+<times srtt="2263" rttvar="2510" to="100000"/>
+</host>
+<host starttime="1556888992" endtime="1556888995"><status state="up" reason="syn-ack" reason_ttl="0"/>
+<address addr="172.17.2.254" addrtype="ipv4"/>
+<hostnames>
+<hostname name="Router.orthoefer.org" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>
+<port protocol="tcp" portid="23"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="telnet" method="table" conf="3"/></port>
+<port protocol="tcp" portid="25"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="smtp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http" method="table" conf="3"/></port>
+<port protocol="tcp" portid="123"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="ntp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="161"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="162"><state state="closed" reason="conn-refused" reason_ttl="0"/><service name="snmptrap" method="table" conf="3"/></port>
+<port protocol="tcp" portid="443"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="https" method="table" conf="3"/></port>
+</ports>
+<times srtt="1678" rttvar="1519" to="100000"/>
+</host>
+<runstats><finished time="1556888995" timestr="Fri May  3 09:09:55 2019" elapsed="3.27" summary="Nmap done at Fri May  3 09:09:55 2019; 256 IP addresses (16 hosts up) scanned in 3.27 seconds" exit="success"/><hosts up="16" down="240" total="256"/>
+</runstats>
+</nmaprun>
