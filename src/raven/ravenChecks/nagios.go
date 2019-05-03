@@ -12,6 +12,7 @@ type nagiosOpts struct {
   prog      string
   progOpts  []string
   addH      bool
+  useDNS    bool
   //resplit   *regexp.Regexp
 }
 
@@ -26,6 +27,7 @@ func nagiosInit( kw ravenTypes.Kwargs) interface{} {
   rtn.progOpts = []string{ "-w", "20,20%", "-c", "40,40%" }
   rtn.progOpts = kw.GetKwargStrA( "options", rtn.progOpts)
   rtn.addH = kw.GetKwargBool( "addhost", true)
+  rtn.useDNS = kw.GetKwargBool( "usedns", false)
   //rtn.resplit = regexp.MustCompile("|")
   r = rtn
   return r
@@ -38,7 +40,7 @@ func nagios( he *ravenTypes.HostEntry, options interface{}) *ravenTypes.ExitRetu
   fullOpts := opts.progOpts
   if opts.addH {
     target := he.Hostname
-    if he.IPv4 != "" {
+    if he.IPv4 != "" && !opts.useDNS {
       target = he.IPv4
     }
     fullOpts = append( fullOpts, "-H", target)
