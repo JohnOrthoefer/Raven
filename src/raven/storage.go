@@ -35,20 +35,15 @@ func isHost( h string) bool {
   return ok
 }
 
-func getEntry( kv ravenTypes.Kwargs, n string, trim bool) string {
-  if v,ok := kv[n]; ok {
-    if trim {
-      return strings.TrimSpace(v)
-    }
-    return v
-  }
-  return ""
-}
-
 func newHost( n string, kv ravenTypes.Kwargs) *ravenTypes.HostEntry {
+  if !kv.GetKwargBool("enabled",true) {
+    ravenLog.SendMessage( 10, "newHost",
+      fmt.Sprint( "Host %s is disabled", n))
+    return nil
+  }
   r := new( ravenTypes.HostEntry)
   r.DisplayName = n
-  r.IPv4 = getEntry( kv, "ipv4", true)
+  r.IPv4 = kv.GetKwargStrTrim( "ipv4", "")
   r.Hostname = getEntry( kv, "hostname", true)
   r.Group = getEntry( kv, "group", true)
   return r

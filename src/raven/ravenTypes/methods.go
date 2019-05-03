@@ -14,6 +14,11 @@ func (kw Kwargs) GetKwargStr( s string, d string) string {
   return d
 }
 
+func (kw Kwargs) GetKwargStrTrim( s string, d string) string {
+  return strings.TrimSpace(kw.GetKwargStr(s,d))
+}
+
+
 func (kw Kwargs) GetKwargStrA( s string, d []string) []string {
   s = strings.ToLower(s)
   if t, ok := kw[s]; ok {
