@@ -7,6 +7,8 @@ import (
   "log"
   "fmt"
   "time"
+  "sort"
+  "strings"
   "net/http"
   "encoding/json"
   "html/template"
@@ -47,6 +49,13 @@ type statusOutput struct {
   Text      string    `json:"longText"`
 }
 
+func formatTime( t time.Time) string {
+  if t.Unix() < 864000 {
+    return "Never"
+  }
+  return t.Format(time.Stamp)
+}
+
 func getStatus() statusOutputList {
   var rtn statusOutputList
   for _,stat := range status {
@@ -55,11 +64,11 @@ func getStatus() statusOutputList {
     t.Group     = stat.Host.Group
     t.Check     = stat.Check.DisplayName
     t.LastrunUx = stat.Last.Unix()
-    t.Lastrun   = stat.Last.Format(time.Stamp)
+    t.Lastrun   = formatTime(stat.Last)
     t.NextrunUx = stat.Next.Unix()
-    t.Nextrun   = stat.Next.Format(time.Stamp)
+    t.Nextrun   = formatTime(stat.Next)
     t.LastChgUx = stat.Change.Unix()
-    t.LastChg   = stat.Change.Format(time.Stamp)
+    t.LastChg   = formatTime(stat.Change)
     t.ChgThr    = fmt.Sprintf( "%d/%d", stat.Count, stat.Check.Threshold)
     t.Exit      = stat.CurExit
     r := stat.Return
@@ -157,11 +166,25 @@ func errStatus(w http.ResponseWriter, r *http.Request) {
       data = append(data, v)
     }
   }
+
+  sort.Slice(data, func(i, j int) bool {
+    if data[i].Exit == data[j].Exit {
+      return strings.ToLower( data[i].Name) < strings.ToLower( data[j].Name)
+    }
+    return data[i].Exit < data[j].Exit
+  })
+
   renderTemplate(w, "status.tmpl", data)
 }
 
 func webStatus(w http.ResponseWriter, r *http.Request) {
   data := getStatus()
+  sort.Slice(data, func(i, j int) bool {
+    if data[i].Group == data[j].Group {
+      return strings.ToLower( data[i].Name) < strings.ToLower( data[j].Name)
+    }
+    return data[i].Group < data[j].Group
+  })
   renderTemplate(w, "status.tmpl", data)
 }
 
@@ -191,7 +214,7 @@ func StartWebserver(port string) {
   loadTemplates()
 
   ravenLog.SendError( 10, "StartWebserver", "Loading Handler functions")
-  http.HandleFunc("/", errStatus)
+  http.HandleFunc("/errors", errStatus)
   http.HandleFunc("/status", webStatus)
   http.HandleFunc("/tabstatus", tabStatus)
   http.HandleFunc("/log", logMessages)
