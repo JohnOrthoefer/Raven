@@ -11,6 +11,11 @@ import (
   "syscall"
 )
 
+
+// move to it's own package?
+// I recycled this code into the config generator.. so it makes
+// sense but I'm also thinking about making the config generator 
+// a detector check.   so maybe it will all come out in the wash
 func runExternal( prog string, args ...string) (int, string) {
 
   var out bytes.Buffer
