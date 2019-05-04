@@ -17,3 +17,7 @@ __pycache__/
 *.tar.bz2
 
 huginn
+tmp/*.ini
+tmp/*.json
+tmp/*.txt
+tmp/*.xml
