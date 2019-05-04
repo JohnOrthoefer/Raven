@@ -81,7 +81,7 @@ type HostJSON struct {
 
 var scanfile string = "scan.xml"
 var nmap NmapInfo
-var groupName string = "Interntal"
+var groupName string = "Internal-LAN"
 var hosts []HostJSON
 
 func getHostInfo( h HostStruct) (name, hn, hi string) {
