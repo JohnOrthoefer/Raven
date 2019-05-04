@@ -2,9 +2,16 @@ package ravenTypes
 
 import (
 //  "log"
+  "regexp"
   "strings"
   "strconv"
 )
+
+var reSpaces *regexp.Regexp
+
+func init() {
+  reSpaces = regexp.MustCompile( `\s+`)
+}
 
 func (kw Kwargs) GetKwargStr( s string, d string) string {
   s = strings.ToLower(s)
@@ -22,8 +29,7 @@ func (kw Kwargs) GetKwargStrTrim( s string, d string) string {
 func (kw Kwargs) GetKwargStrA( s string, d []string) []string {
   s = strings.ToLower(s)
   if t, ok := kw[s]; ok {
-    rtn := strings.Split( strings.TrimSpace( t), " ")
-    return rtn
+    return reSpaces.Split( strings.TrimSpace(t), -1)
   }
   return d
 }

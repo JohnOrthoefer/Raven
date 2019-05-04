@@ -3,7 +3,6 @@ package raven
 import (
   "time"
   "fmt"
-  "regexp"
   "strings"
   "sort"
   "./ravenLog"
@@ -44,29 +43,26 @@ func newHost( n string, kv ravenTypes.Kwargs) *ravenTypes.HostEntry {
   r := new( ravenTypes.HostEntry)
   r.DisplayName = n
   r.IPv4 = kv.GetKwargStrTrim( "ipv4", "")
-  r.Hostname = getEntry( kv, "hostname", true)
-  r.Group = getEntry( kv, "group", true)
+  r.Hostname = kv.GetKwargStrTrim("hostname", "")
+  if r.Hostname == "" && r.IPv4 == "" {
+    ravenLog.SendMessage( 10, "newHost",
+      fmt.Sprint( "Host %s, hostname and IP addres are blank", n))
+    return nil
+  }
+  r.Group = kv.GetKwargStrTrim( "group", "Internal-LAN")
   return r
 }
 
 func newCheck( n string, kv ravenTypes.Kwargs) *ravenTypes.CheckEntry {
   r := new( ravenTypes.CheckEntry)
-  re := regexp.MustCompile( `\s+`)
 
   r.DisplayName = n
   // Check function that will be run
-  r.CheckN = getEntry( kv, "checkwith", true)
+  r.CheckN = kv.GetKwargStrTrim("checkwith", "ping")
   r.CheckF = ravenChecks.CheckFunc[r.CheckN]
 
   // set up the run intervals
-  t,_ := time.ParseDuration( "30s")
-  for i:= range r.Interval {
-    r.Interval[i] = t
-  }
-  k:=getEntry(kv, "interval", true)
-  inter := re.Split( k, len(r.Interval))
-  for i,j := range inter {
-    ravenLog.SendError( 99, "newCheck", fmt.Sprintf( "Parsing %s", j))
+  for i,j := range kv.GetKwargStrA("interval",[]string{"90s", "1m", "30s", "30s"}) {
     if t,ok := time.ParseDuration( j); ok==nil {
       r.Interval[i] = t
     } else {
@@ -77,7 +73,7 @@ func newCheck( n string, kv ravenTypes.Kwargs) *ravenTypes.CheckEntry {
   r.Threshold = int(kv.GetKwargInt( "threshold", 5))
 
   // array of hosts that use this check
-  for _,n := range re.Split( getEntry(kv, "hosts", true), -1) {
+  for _,n := range kv.GetKwargStrA( "hosts", []string{}) {
     // dedup the hosts
     if contains( n, r.Hosts) {
       continue
@@ -101,6 +97,8 @@ func newCheck( n string, kv ravenTypes.Kwargs) *ravenTypes.CheckEntry {
 
 func AddEntry( n string, kv map[string]string) {
   if _,ok := kv["hostname"]; ok {
+    hosts[n] = newHost(n, kv)
+  } else if _,ok := kv["ipv4"]; ok {
     hosts[n] = newHost(n, kv)
   } else if _,ok := kv["checkwith"]; ok {
     checks[n] = newCheck(n, kv)
