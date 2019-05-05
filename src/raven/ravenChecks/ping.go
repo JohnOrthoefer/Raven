@@ -33,7 +33,7 @@ func init() {
 	rePing["ping-rtt"], _ = regexp.Compile(`\d+\.?\d+/(\d+\.?\d+)/\d+\.?\d+/\d+\.?\d+`)
 	rePing["ping-loss"], _ = regexp.Compile(`(\d+)\% packet loss`)
 
-	registerHandler("ping", FpingInit, Ping)
+	registerHandler("fping", FpingInit, Ping)
 	rePing["fping-rtt"], _ = regexp.Compile(`min/avg/max = \d+\.?\d+/(\d+\.?\d+)/\d+\.?\d+`)
 	rePing["fping-loss"], _ = regexp.Compile(`xmt/rcv/\%loss = \d+/\d+/(\d+)\%,`)
 }
