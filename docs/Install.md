@@ -11,8 +11,10 @@ rsync -av src/huggin /srv/Raven/
 rsync -av etc/raven.ini /srv/Raven/
 rsync -av etc/raven.service /etc/systemd/system/
 ```
-* Edit `/srv/Raven/raven.ini` 
-  Add whatever you want to monitor 
+* Run the Discover to generate a template for your network
+  `nmapparse -ini`  
+  This will generate the file `Internal-LAN.ini` based on your local network.
+* `cp Internal-LAN.ini /srv/Raven/raven.ini` 
 
 * Start the daemon
 ```
