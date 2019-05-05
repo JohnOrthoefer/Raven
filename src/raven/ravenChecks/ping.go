@@ -84,7 +84,7 @@ func Ping(he *ravenTypes.HostEntry, options interface{}) *ravenTypes.ExitReturn 
 	case 0:
 		rtt := opts.rttReg.FindAllStringSubmatch(output, -1)
 		pls := opts.lossReg.FindAllStringSubmatch(output, -1)
-		rttAvg, _ := strconv.ParseFloat(rtt[0][3], 32)
+		rttAvg, _ := strconv.ParseFloat(rtt[0][1], 32)
 		loss, _ := strconv.ParseInt(pls[0][1], 10, 32)
 		e.Exit = 0
 		e.Text = fmt.Sprintf("%s Okay", opts.name)
