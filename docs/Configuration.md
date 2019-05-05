@@ -24,7 +24,12 @@ Each section is identified by a unique name inside square brackets, `[]`.  This 
 
 ## Checks
 ### All checks
-there are a few Keys that are common to every check.  
+There are a few Keys that are common to every check.  
+* `checkwith = ping` what check to run
+* `interval = 1m30s 1m 30s 30s` how often to check, based on the return code of the last run.  space seperate, it understand h=hours, m=minutes, s=seconds.  The 4 values are okay, warning, critical, unknown.
+* `threshold = 5` number of times a check is required to *change* status.  1 means if it fails the check changes, this is used for checks like certificate experation, if the cert has expire, it is expired.
+* `hosts = ` the hosts that this check needs to be run for.
+* `enabled = true` used to disable this check completely, without deleting it from the configuration.
 
 ### `checkwith = ping`
 * `program = /usr/bin/ping` The fully qualified path to the ping program on your system. 
@@ -36,4 +41,26 @@ there are a few Keys that are common to every check.
 This is the same as ping, with the exception of the program to run which is by default `program = /usr/bin/fping`.  It does change 
 
 ### `checkwith = nagios`
-This 
+This runs a nagios check.  
+* `program = /usr/lib/monitoring-plugins/check_ping` The program to run
+* `options = -w 20,20% -c 40,40%` options to pass to the program
+* `addhost = true` If you want `-H [HOST/IP]` it will pass the IP address if there is one then it falls back to passing the `hostname`
+* `usedns = false` the default is to use the IP if available, if you want to use the hostname always set this to true
+
+### `checkwith = viassh`
+This runs a check via ssh.  Typically a remote nagios check.
+* `ssh = /usr/bin/ssh` 
+* `sshoptions = ""` options passed before the hostname and executable.  This should not be nessary since you can do set most options in the `~/.ssh/config`
+* `program = /usr/lib/monitoring-plugins/check_ping` The program to run on the remote host
+* `options = -w 20,20% -c 40,40%` options to pass to the remote program 
+* `addhost = true` If you want `-H [HOST/IP]` it will pass the IP address if there is one then it falls back to passing the `hostname`
+* `usedns = false` the default is to use the IP if available, if you want to use the hostname always set this to true
+
+## Host
+* Host address
+  * `host = ` DNS Hostname of the machine
+  * `ipv4 = ` IPv4 address of the machine
+  * if both exist the v4 address is used.  Some check commands can override this behavior
+* `group = Internal-LAN` the default display group name
+* `enabled = true` used to disable a host without removing it from the configuration
+
