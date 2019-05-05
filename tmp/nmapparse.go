@@ -17,6 +17,9 @@ import (
   ini "github.com/ochinchina/go-ini"
 )
 
+var nmap NmapInfo
+const baseini="base.ini"
+
 type NmapInfo struct {
 //  XMLName xml.Name  `xml:"nmaprun"`
   Scanner string `xml:"scanner,attr"`
@@ -114,7 +117,6 @@ func runExternal( prog string, args ...string) (int, string) {
   return rtnExit, out.String()
 }
 
-var nmap NmapInfo
 
 func getHostInfo( h HostStruct) (name, hn, hi string) {
   if len(h.Hostname)> 0 {
@@ -209,25 +211,37 @@ func main() {
     log.Fatal( err)
   }
 
-  ini := ini.NewIni()
+  //ini := ini.NewIni()
+  ini := ini.Load( baseini)
   hosts := make(map[string]*HostJSON)
+  portsEnabled := make(map[int][]string)
   for _,v:= range nmap.Host {
     hr := new( HostJSON)
     hr.Name,hr.Hostname,hr.IPv4 = getHostInfo( v)
-
     hr.When = time.Unix( v.EndTime, 0)
     section := ini.NewSection( hr.Name)
     section.Add( "hostname", hr.Hostname)
     section.Add( "group", groupName)
     section.Add( "enabled", "true")
     section.Add( "ipv4", hr.IPv4)
+    portsEnabled[0] = append(portsEnabled[0], hr.Name)
     for _,p := range v.Ports {
       if p.State.State == "open" {
         hr.Ports = append(hr.Ports, p.PortID)
+        portsEnabled[p.PortID] = append(portsEnabled[p.PortID], hr.Name)
       }
     }
     log.Printf( "%s(%s) %v", hr.Name, hr.IPv4, hr.Ports)
     hosts[hr.Name] = hr
+  }
+  for k,v := range portsEnabled {
+    log.Printf( "Port:%d %s", k, strings.Join( v, " "))
+    c := []string{ "Check", strconv.Itoa(k)}
+    section, err := ini.GetSection( strings.Join(c, "-"))
+    if err != nil {
+      continue
+    }
+    section.Add( "hosts", strings.Join(v, " "))
   }
 
   if *iniFile {
