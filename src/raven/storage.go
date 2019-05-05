@@ -37,7 +37,7 @@ func isHost(h string) bool {
 
 func newHost(n string, kv ravenTypes.Kwargs) *ravenTypes.HostEntry {
 	if !kv.GetKwargBool("enabled", true) {
-		ravenLog.SendMessage(10, "newHost",
+		ravenLog.SendError(10, "newHost",
 			fmt.Sprint("Host %s is disabled", n))
 		return nil
 	}
@@ -46,7 +46,7 @@ func newHost(n string, kv ravenTypes.Kwargs) *ravenTypes.HostEntry {
 	r.IPv4 = kv.GetKwargStrTrim("ipv4", "")
 	r.Hostname = kv.GetKwargStrTrim("hostname", "")
 	if r.Hostname == "" && r.IPv4 == "" {
-		ravenLog.SendMessage(10, "newHost",
+		ravenLog.SendError(10, "newHost",
 			fmt.Sprint("Host %s, hostname and IP addres are blank", n))
 		return nil
 	}
@@ -105,7 +105,7 @@ func newCheck(n string, kv ravenTypes.Kwargs) *ravenTypes.CheckEntry {
 
 func AddEntry(n string, kv ravenTypes.Kwargs) {
 	if !kv.GetKwargBool("enabled", true) {
-		ravenLog.SendMessage(10, "AddEntry",
+		ravenLog.SendError(10, "AddEntry",
 			fmt.Sprintf("Disabled section %s", n))
 		return
 	}
@@ -119,7 +119,7 @@ func AddEntry(n string, kv ravenTypes.Kwargs) {
 			checks[n] = tmp
 		}
 	} else {
-		ravenLog.SendMessage(10, "AddEntry", fmt.Sprintf("Unknown Section Type %s", n))
+		ravenLog.SendError(10, "AddEntry", fmt.Sprintf("Unknown Section Type %s", n))
 	}
 }
 
@@ -164,13 +164,13 @@ func GetHostEntry(c string) *ravenTypes.HostEntry {
 
 func printHosts() {
 	for i := range hosts {
-		ravenLog.SendMessage(10, "printHosts", fmt.Sprintf("hosts[%s] = %v", i, hosts[i]))
+		ravenLog.SendError(10, "printHosts", fmt.Sprintf("hosts[%s] = %v", i, hosts[i]))
 	}
 }
 
 func printChecks() {
 	for i := range checks {
-		ravenLog.SendMessage(10, "printChecks", fmt.Sprintf("checks[%s] = %v", i, checks[i]))
+		ravenLog.SendError(10, "printChecks", fmt.Sprintf("checks[%s] = %v", i, checks[i]))
 	}
 }
 
