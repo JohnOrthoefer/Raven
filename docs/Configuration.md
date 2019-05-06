@@ -2,11 +2,12 @@
 ## Auto configuration
 `nmapparse` is used for inital configuration/network descovery.  This program attempts to scan your local subnet with `/usr/bin/nmap` and then parses the XML output.  
 
-* `-net NETWORK/CIDR` the network to scan.  If you don't provide one, the program *makes a guess*
-* `-group Internal-LAN` this is the tag all the hosts found will be added to
-* `-disabled` mark all hosts as `enabled=false`
-* `-dhcp 100-200` in the ini file do not add an `ipv4=` entry if the lowest octet falls in this range.   This option won't work correctly if your CIDR block is larger is /24. To disable, set the range to `256-256`.
-* **Output generation**
+* **Discovery**
+  * `-net NETWORK/CIDR` the network to scan.  If you don't provide one, the program *makes a guess*
+  * `-group Internal-LAN` this is the tag all the hosts found will be added to
+  * `-disabled` mark all hosts as `enabled=false`
+  * `-dhcp 100-200` in the ini file do not add an `ipv4=` entry if the lowest octet falls in this range.   This option won't work correctly if your CIDR block is larger is /24. To disable, set the range to `256-256`.
+* **Output**
 If you do not provide at lease one of these the program only prints out *what it found.*
   * `-json` output GROUPNAME.json file with all the found hosts
   * `-ini` output GROUPNAME.ini file for all the found hosts.  This file will have some basic checks enabled for all all hosts, currently `ping` for all hosts, and for hosts with the following ports open-
