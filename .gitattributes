@@ -1,1 +1,2 @@
 *.txt ident
+src/license/license.go ident
