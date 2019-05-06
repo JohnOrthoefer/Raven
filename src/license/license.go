@@ -16,32 +16,41 @@
    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 */
-
-package raven
+package license
 
 import (
-	"./ravenLog"
-	"./ravenTypes"
 	"fmt"
-	ini "github.com/ochinchina/go-ini"
+	"io"
+	"log"
+	"os"
 )
 
-func makeMap(s *ini.Section) ravenTypes.Kwargs {
-	r := make(ravenTypes.Kwargs)
-	for _, key := range s.Keys() {
-		n := key.Name()
-		v, _ := s.GetValue(n)
-		r[n] = v
-	}
-	return r
+func buildLicense() (rtn []string) {
+	return append(rtn,
+		"Raven Network Discovery and Monitoring",
+		fmt.Sprintf("Copyright (C) %d  %s\n", 2019,
+			"John{at}Orthoefer{dot}org"),
+		"This program comes with ABSOLUTELY NO WARRANTY.",
+		"This is free software, and you are welcome to redistribute",
+		"it under certain conditions.  For details see COPYING text file.")
 }
 
-func ReadConfig(iniFile string) {
-	ini := ini.Load(iniFile)
-	for _, section := range ini.Sections() {
-		secName := section.Name
-		ravenLog.SendError(10, "Configuration", fmt.Sprintf("Parsing Section %s", secName))
-		keyVal := makeMap(section)
-		AddEntry(secName, keyVal)
+func LogLicense() {
+	for _, v := range buildLicense() {
+		log.Printf("%s", v)
 	}
+}
+
+func licenseOutput(w io.Writer) {
+	for _, v := range buildLicense() {
+		fmt.Fprintf(w, "%s", v)
+	}
+}
+
+func PrintLicense() {
+	licenseOutput(os.Stdout)
+}
+
+func ErrLicense() {
+	licenseOutput(os.Stderr)
 }
