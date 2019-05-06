@@ -1,11 +1,25 @@
 # Configuration
 ## Auto configuration
-Included is `nmapparse`.  This program attempts to scan your local subnet with nmap and then parses the XML output.  You can control which network it probes, and even provide your own nmap XML for it parse and output a ini file. 
+`nmapparse` is used for inital configuration/network descovery.  This program attempts to scan your local subnet with `/usr/bin/nmap` and then parses the XML output.  
+
+* `-net NETWORK/CIDR` the network to scan.  If you don't provide one, the program *makes a guess*
+* `-group Internal-LAN` this is the tag all the hosts found will be added to
+* `-disabled` mark all hosts as `enabled=false`
+* `-dhcp 100-200` in the ini file do not add an `ipv4=` entry if the lowest octet falls in this range.   This option won't work correctly if your CIDR block is larger is /24. To disable, set the range to `256-256`.
+* **Output generation**
+If you do not provide at lease one of these the program only prints out *what it found.*
+  * `-json` output GROUPNAME.json file with all the found hosts
+  * `-ini` output GROUPNAME.ini file for all the found hosts.  This file will have some basic checks enabled for all all hosts, currently `ping` for all hosts, and for hosts with the following ports open-
+    * port 22 /usr/lib/monitoring-plugins/check_ssh
+    * port 80 /usr/lib/monitoring-plugins/check_http
+    * port 443 /usr/lib/monitoring-plugins/check_http *to check certificate*
+  * `-skel base.ini` the file with the base checks in it for.ini 
+
 
 ## Deamon 
-* `-config` - points the daemon at the configration file to use. The default is `../etc/raven.ini` However, you can name and place the file where ever you want.
-* `-port` - what port to use for the webserver.  **Default** `:8000`
-* `-workers` - how many *worker threads* to spawn.  Understand these are go routines so it will not map 1 to 1 to what your OS shows.
+* `-config` points the daemon at the configration file to use. The default is `../etc/raven.ini` However, you can name and place the file where ever you want.
+* `-port` what port to use for the webserver.  **Default** `:8000`
+* `-workers` how many *worker threads* to spawn.  Understand these are go routines so it will not map 1 to 1 to what your OS shows.
 
 ## Monitoring file
 All the monitoring goes into a single ini file.   
@@ -38,7 +52,7 @@ There are a few Keys that are common to every check.
 * `loss_warn = 20` or `loss_crit = 40` The percentage of loss packets to consider warning or critical.
 
 ### `checkwith = fping`
-This is the same as ping, with the exception of the program to run which is by default `program = /usr/bin/fping`.  It does change 
+This is the same as ping, with the exception of the program to run which is by default `program = /usr/bin/fping`.  It does change the regular expressions used to find the average rtt and % loss.  
 
 ### `checkwith = nagios`
 This runs a nagios check.  
