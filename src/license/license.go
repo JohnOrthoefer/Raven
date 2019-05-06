@@ -25,9 +25,12 @@ import (
 	"os"
 )
 
+const version = "$Id$"
+
 func buildLicense() (rtn []string) {
 	return append(rtn,
 		"Raven Network Discovery and Monitoring",
+		version,
 		fmt.Sprintf("Copyright (C) %d  %s\n", 2019,
 			"John{at}Orthoefer{dot}org"),
 		"This program comes with ABSOLUTELY NO WARRANTY.",
