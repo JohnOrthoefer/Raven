@@ -17,7 +17,7 @@ If you do not provide at either `-json` or `-ini` the program only prints to the
   * `-skel base.ini` the file with the base checks in it for.ini 
   * `-disabled` mark all hosts as `enabled=false`
   * `-group Internal-LAN` this is the tag all the hosts found will be added to
-  * `-dhcp 100-200` in the ini file do not add an `ipv4=` entry if the lowest octet falls in this range.   This option won't work correctly if your CIDR block is larger is /24. To disable, set the range to `256-256`.
+  * `-dhcp 100-200` in the ini file do not add an `ipv4=` entry if the least sigificate octet falls in this range.   This option won't work correctly if your CIDR block is larger is /24. To disable, set the range to `256-256`.
 
 
 ## Deamon 
