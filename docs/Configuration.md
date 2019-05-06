@@ -3,18 +3,21 @@
 `nmapparse` is used for inital configuration/network descovery.  This program attempts to scan your local subnet with `/usr/bin/nmap` and then parses the XML output.  
 
 * **Discovery**
+These options control how network discovery is done. 
   * `-net NETWORK/CIDR` the network to scan.  If you don't provide one, the program *makes a guess*
-  * `-group Internal-LAN` this is the tag all the hosts found will be added to
-  * `-disabled` mark all hosts as `enabled=false`
-  * `-dhcp 100-200` in the ini file do not add an `ipv4=` entry if the lowest octet falls in this range.   This option won't work correctly if your CIDR block is larger is /24. To disable, set the range to `256-256`.
+* **Input**
+  * `-xml FILENAME` provide a file instead of allowing it to run nmap.
 * **Output**
-If you do not provide at lease one of these the program only prints out *what it found.*
+If you do not provide at either `-json` or `-ini` the program only prints to the terminal a summary of what it found. 
   * `-json` output GROUPNAME.json file with all the found hosts
   * `-ini` output GROUPNAME.ini file for all the found hosts.  This file will have some basic checks enabled for all all hosts, currently `ping` for all hosts, and for hosts with the following ports open-
     * port 22 /usr/lib/monitoring-plugins/check_ssh
     * port 80 /usr/lib/monitoring-plugins/check_http
     * port 443 /usr/lib/monitoring-plugins/check_http *to check certificate*
   * `-skel base.ini` the file with the base checks in it for.ini 
+  * `-disabled` mark all hosts as `enabled=false`
+  * `-group Internal-LAN` this is the tag all the hosts found will be added to
+  * `-dhcp 100-200` in the ini file do not add an `ipv4=` entry if the lowest octet falls in this range.   This option won't work correctly if your CIDR block is larger is /24. To disable, set the range to `256-256`.
 
 
 ## Deamon 
