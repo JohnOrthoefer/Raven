@@ -129,8 +129,11 @@ func receiver(r chan *ravenTypes.StatusEntry) {
 			// if it's the same reset to zero
 			job.Count = 0
 		}
+		next := job.Check.Interval[job.CurExit].Seconds()
+		offset := int(next * 0.10)
+		offset = rand.Intn(offset) - int(offset/2)
 		job.Next = job.Last.Add(job.Check.Interval[job.CurExit]).
-			Add(time.Duration(rand.Intn(10)-5) * time.Second)
+			Add(time.Duration(offset) * time.Second)
 		ravenLog.SendMessage(10, "receiver", fmt.Sprintf("Rescheduling %s(%s) in %s Exit: %d",
 			job.Host.DisplayName, job.Check.DisplayName,
 			time.Until(job.Next).Round(time.Second), job.Return.Exit))
