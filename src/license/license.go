@@ -26,6 +26,7 @@ import (
 )
 
 const version = "$Id$"
+const log = "$Log:$"
 
 func buildLicense() (rtn []string) {
 	return append(rtn,
