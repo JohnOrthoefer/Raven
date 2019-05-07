@@ -5,6 +5,7 @@ GITTAG=`git tag | head`
 GITCOMMIT=`git log -1 --pretty=oneline`
 VERSIONFILE=huginn/version.go
 
+echo Generating Version file
 rm -f ${VERSIONFILE}
 echo "package main" > ${VERSIONFILE}
 echo "const (" >> ${VERSIONFILE}
@@ -16,6 +17,18 @@ echo "\`" >> ${VERSIONFILE}
 echo "  BUILD_DATE = \"${BUILD_DATE}\"" >> ${VERSIONFILE}
 echo ")" >> ${VERSIONFILE}
 
-(cd huginn; go build huginn.go version.go)
+
+echo Building huginn
+(cd huginn; \
+  go build huginn.go version.go &&\
+  mv huginn ../../bin\
+)
+
+echo Build nmapparse
+cp ${VERSIONFILE} nmapparse/
+(cd nmapparse; \
+  go build nmapparse.go version.go &&\
+  mv nmapparse ../../bin\
+)
 
 exit 0

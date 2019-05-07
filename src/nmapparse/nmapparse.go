@@ -195,6 +195,7 @@ func main() {
 
 	// print license
 	license.LogLicense()
+	log.Printf("Commit: %s", COMMIT)
 
 	// Do the CLI flags
 	scanfile := flag.String("xml", "", "XML Output from nmap")

@@ -21,3 +21,4 @@ tmp/*.ini
 tmp/*.json
 tmp/*.txt
 tmp/*.xml
+bin/
