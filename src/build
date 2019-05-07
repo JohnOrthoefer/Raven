@@ -1,0 +1,21 @@
+#!/usr/bin/sh
+
+BUILD_DATE=`date +%Y-%m-%d\ %H:%M`
+GITTAG=`git tag | head`
+GITCOMMIT=`git log -1 --pretty=oneline`
+VERSIONFILE=huginn/version.go
+
+rm -f ${VERSIONFILE}
+echo "package main" > ${VERSIONFILE}
+echo "const (" >> ${VERSIONFILE}
+echo "  VERSION = \"${GITTAG}\"" >> ${VERSIONFILE}
+echo "  COMMIT = \"${GITCOMMIT}\"" >> ${VERSIONFILE}
+echo "  FULL = \`" >> ${VERSIONFILE}
+git log -1 --pretty=full >> ${VERSIONFILE}
+echo "\`" >> ${VERSIONFILE}
+echo "  BUILD_DATE = \"${BUILD_DATE}\"" >> ${VERSIONFILE}
+echo ")" >> ${VERSIONFILE}
+
+(cd huginn; go build huginn.go version.go)
+
+exit 0

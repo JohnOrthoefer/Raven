@@ -25,19 +25,26 @@ import (
 	"./raven/ravenLog"
 	"flag"
 	"fmt"
+	"log"
 )
 
 // this will never have true in it.. it's jsut a simple way to hold the main thread open
 var done = make(chan bool)
 
 func main() {
-	license.LogLicense()
+	license.LogLicense(VERSION, COMMIT)
+	log.Printf("Commit: %s", COMMIT)
 	ravenLog.SendError(10, "main", "Starting...")
 
 	configFile := flag.String("config", "../etc/raven.ini", "Configuration File")
 	webPort := flag.String("port", ":8000", "Webserver Port")
 	workers := flag.Int("workers", 3, "Worker Process")
+	version := flag.Bool("version", false, "Display Full Version")
 	flag.Parse()
+
+	if *version {
+		log.Fatal(FULL)
+	}
 
 	ravenLog.SendError(10, "main", fmt.Sprintf("Config File: %s", *configFile))
 	ravenLog.SendError(10, "main", fmt.Sprintf("Listen Port: %s", *webPort))
