@@ -1,13 +1,13 @@
 package main
 const (
   VERSION = "Alpha.1"
-  COMMIT = "d5c9e6f30c049f5e03a13d284cb72749cf51204d Made a build script that include s the commit line"
+  COMMIT = "bea1a095f7627936d0319cb81da33b8621c2341c Updated the build script"
   FULL = `
-commit d5c9e6f30c049f5e03a13d284cb72749cf51204d
+commit bea1a095f7627936d0319cb81da33b8621c2341c
 Author: John Orthoefer <john@orthoefer.org>
 Commit: John Orthoefer <john@orthoefer.org>
 
-    Made a build script that include s the commit line
+    Updated the build script
 `
-  BUILD_DATE = "2019-05-06 23:23"
+  BUILD_DATE = "2019-05-07 00:01"
 )

@@ -25,6 +25,7 @@ import (
 	"encoding/xml"
 	"flag"
 	"fmt"
+  "sort"
 	ini "github.com/ochinchina/go-ini"
 	"io/ioutil"
 	"log"
@@ -270,7 +271,13 @@ func main() {
 		log.Printf("%s(%s) %v", hr.Name, hr.IPv4, hr.Ports)
 		hosts[hr.Name] = hr
 	}
-	for k, v := range portsEnabled {
+  var keys []int
+  for k:= range portsEnabled {
+    keys = append(keys, k)
+  }
+  sort.Ints(keys)
+	for _,k := range keys {
+    v := portsEnabled[k]
 		log.Printf("Port:%d %s", k, strings.Join(v, " "))
 		c := []string{"Check", strconv.Itoa(k)}
 		section, err := ini.GetSection(strings.Join(c, "-"))
