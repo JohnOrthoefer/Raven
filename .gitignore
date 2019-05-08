@@ -14,7 +14,10 @@ __pycache__/
 
 *.tar
 *.tgz
-*.tar.bz2
+*.tar.bz3
+
+# Emacs backup files
+*~
 
 huginn
 tmp/*.ini
