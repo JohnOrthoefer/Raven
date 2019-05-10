@@ -25,8 +25,5 @@ __pycache__/
 huginn
 nmapparse
 src/*/version.go
-tmp/*.ini
-tmp/*.json
-tmp/*.txt
-tmp/*.xml
+tmp/
 bin/
