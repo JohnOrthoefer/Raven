@@ -27,10 +27,10 @@ import (
 	"flag"
 	"fmt"
 	"log"
+  "os"
+  "os/signal"
+  "syscall"
 )
-
-// this will never have true in it.. it's jsut a simple way to hold the main thread open
-var done = make(chan bool)
 
 func main() {
 	license.LogLicense(VERSION, COMMIT)
@@ -58,5 +58,14 @@ func main() {
 	raven.BuildSchedule()
 	raven.StartSchedule(*workers)
 	raven.StartWebserver(*webPort)
-	<-done
+
+  sigs := make (chan os.Signal, 1)
+  done := false
+  signal.Notify(sigs, syscall.SIGHUP, syscall.SIGTERM)
+  ravenLog.SendError( 10, "main", "Listening for signals")
+  for !done {
+    sig := <-sigs
+    ravenLog.SendError( 10, "main", fmt.Sprintf("Got Signal %d", sig))
+  }
+	ravenLog.SendError(10, "main", "Exiting")
 }
