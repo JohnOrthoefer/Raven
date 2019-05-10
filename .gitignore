@@ -10,8 +10,10 @@
 __pycache__/
 *.py[cod]
 
+# vi/vim swap files
 *swp
 
+# archive files
 *.tar
 *.tgz
 *.tar.bz3
@@ -19,7 +21,10 @@ __pycache__/
 # Emacs backup files
 *~
 
+# build products
 huginn
+nmapparse
+src/*/version.go
 tmp/*.ini
 tmp/*.json
 tmp/*.txt
