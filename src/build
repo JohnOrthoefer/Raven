@@ -1,41 +1,56 @@
 #!/usr/bin/sh
 
+cd $(dirname $0)/..
+
+BASEDIR=`pwd`
+SRCDIR=${BASEDIR}/src
+BINDIR=${BASEDIR}/bin
+echo BASEDIR = ${BASEDIR}
+echo BINDIR = ${BINDIR}
+echo SRCDIR = ${SRCDIR}
+
 BUILD_DATE=`date +%Y-%m-%d\ %H:%M`
 GITTAG=`git tag | head`
 GITCOMMIT=`git log -1 --pretty=oneline`
-VERSIONFILE=huginn/version.go
+VERSIONFILE=${SRCDIR}/huginn/version.go
 
 echo Generating Version file
 rm -f ${VERSIONFILE}
-echo "package main" > ${VERSIONFILE}
-echo "const (" >> ${VERSIONFILE}
-echo "  VERSION = \"${GITTAG}\"" >> ${VERSIONFILE}
-echo "  COMMIT = \"${GITCOMMIT}\"" >> ${VERSIONFILE}
-echo "  FULL = \`" >> ${VERSIONFILE}
-git log -1 --pretty=full >> ${VERSIONFILE}
-echo "\`" >> ${VERSIONFILE}
-echo "  BUILD_DATE = \"${BUILD_DATE}\"" >> ${VERSIONFILE}
-echo ")" >> ${VERSIONFILE}
-
+cat <<EOP > ${VERSIONFILE}
+package main
+const (
+  BUILD_DATE = "${BUILD_DATE}"
+  VERSION = "${GITTAG}"
+  COMMIT = "${GITCOMMIT}"
+  FULL = \`
+`git log -1 --pretty=full`
+\`
+)
+EOP
 
 echo Build plugins
-(cd huginn/raven; \
+(cd ${SRCDIR}/huginn/raven
   for i in plugin-*/*.go ; do
     d=`dirname ${i}`
     p=`basename ${i} .go`
-    go build -buildmode=plugin -o ../../../bin/plugins/${p}.so ${d}/${p}.go
+    echo -- Building ${d}
+    go build -buildmode=plugin -o ${BINDIR}/plugins/${p}.so ${d}/${p}.go
   done 
 )
 
 echo Building huginn
-(cd huginn; \
-  go build -o ../../bin/huginn huginn.go version.go \
+(cd ${SRCDIR}/huginn
+  go build -o ${BINDIR}/huginn huginn.go version.go 
+  echo -- copy web templates
+  rsync -a templates ${BINDIR}
 )
 
 echo Build nmapparse
-cp ${VERSIONFILE} nmapparse/
-(cd nmapparse; \
-  go build -o ../../bin/nmapparse nmapparse.go version.go \
+cp ${VERSIONFILE} ${SRCDIR}/nmapparse/
+(cd ${SRCDIR}/nmapparse
+  go build -o ${BINDIR}/nmapparse nmapparse.go version.go
+  echo -- copy base.ini
+  rsync -a base.ini ${BINDIR}
 )
 
 exit 0
