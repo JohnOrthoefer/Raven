@@ -18,17 +18,24 @@ echo "  BUILD_DATE = \"${BUILD_DATE}\"" >> ${VERSIONFILE}
 echo ")" >> ${VERSIONFILE}
 
 
+echo Build plugins
+(cd huginn/raven; \
+  for i in plugin-*/*.go ; do
+    d=`dirname ${i}`
+    p=`basename ${i} .go`
+    go build -buildmode=plugin -o ../../../bin/plugins/${p}.so ${d}/${p}.go
+  done 
+)
+
 echo Building huginn
 (cd huginn; \
-  go build huginn.go version.go &&\
-  mv huginn ../../bin\
+  go build -o ../../bin/huginn huginn.go version.go \
 )
 
 echo Build nmapparse
 cp ${VERSIONFILE} nmapparse/
 (cd nmapparse; \
-  go build nmapparse.go version.go &&\
-  mv nmapparse ../../bin\
+  go build -o ../../bin/nmapparse nmapparse.go version.go \
 )
 
 exit 0

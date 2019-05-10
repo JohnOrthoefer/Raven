@@ -20,6 +20,9 @@
 package ravenChecks
 
 import (
+  "log"
+  "path/filepath"
+  "plugin"
 	"../ravenTypes"
 )
 
@@ -30,15 +33,46 @@ var CheckInit CheckIMap
 var CheckFunc CheckFMap
 
 func init() {
-}
+  CheckFunc = make(CheckFMap)
+	CheckInit = make(CheckIMap)
 
-func registerHandler(n string,
-	iptr ravenTypes.CheckInitType,
-	fptr ravenTypes.CheckFuncType) {
-	if CheckFunc == nil {
-		CheckFunc = make(CheckFMap)
-		CheckInit = make(CheckIMap)
-	}
-	CheckInit[n] = iptr
-	CheckFunc[n] = fptr
+  plugins, err := filepath.Glob( "plugins/*.so")
+  if err != nil {
+    log.Fatal(err)
+  }
+
+  for i,v := range plugins {
+    log.Printf("Plugin-%d: %s\n", i, v)
+
+    plug,err := plugin.Open(v)
+    if err != nil {
+      log.Fatal( "Error openin %s", v)
+    }
+
+    n,err := plug.Lookup( "CheckName")
+    if err != nil {
+      log.Fatal( "No CheckName in %s", v)
+    }
+    checkName := n.(*string)
+
+	  fInitCheck,err := plug.Lookup( "InitCheck")
+    if err != nil {
+      log.Fatal( "Error looking up InitCheck() in %s", v)
+    }
+	  fi,ok := fInitCheck.(func(ravenTypes.Kwargs) interface{})
+    if !ok {
+      log.Fatal( "No InitCheck() symbol in %s", v)
+    }
+    CheckInit[*checkName] = fi
+
+	  fRunCheck,err := plug.Lookup( "RunCheck")
+    if err != nil {
+      log.Fatal( "Error looking up RunCheck() in %s", v)
+    }
+	  fc,ok := fRunCheck.(func(*ravenTypes.HostEntry, interface{}) *ravenTypes.ExitReturn)
+    if !ok {
+      log.Fatal( "No RunCheck() symbol in %s", v)
+    }
+    CheckFunc[*checkName] = fc
+  }
 }

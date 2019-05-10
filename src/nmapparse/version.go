@@ -1,13 +1,13 @@
 package main
 const (
   VERSION = "Alpha.1"
-  COMMIT = "bea1a095f7627936d0319cb81da33b8621c2341c Updated the build script"
+  COMMIT = "5c1c2b74bb5dbc79dd22b3764d69d0a0da0306bb don't need these any more"
   FULL = `
-commit bea1a095f7627936d0319cb81da33b8621c2341c
-Author: John Orthoefer <john@orthoefer.org>
-Commit: John Orthoefer <john@orthoefer.org>
+commit 5c1c2b74bb5dbc79dd22b3764d69d0a0da0306bb
+Author: John Orthoefer <John@Orthoefer.org>
+Commit: John Orthoefer <John@Orthoefer.org>
 
-    Updated the build script
+    don't need these any more
 `
-  BUILD_DATE = "2019-05-07 00:01"
+  BUILD_DATE = "2019-05-10 09:42"
 )
