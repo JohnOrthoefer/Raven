@@ -37,10 +37,11 @@ import (
 	"time"
 )
 
+// Structure to keep the nmap output XML into
 var nmap NmapInfo
 
+// nmap Header XML
 type NmapInfo struct {
-	//  XMLName xml.Name  `xml:"nmaprun"`
 	Scanner       string       `xml:"scanner,attr"`
 	Args          string       `xml:"args,attr"`
 	Start         int64        `xml:"start,attr"`
@@ -58,6 +59,16 @@ type InfoStruct struct {
 	svrs  string `xml:"services,attr"`
 }
 
+// nmap Host (per host XML)
+type HostStruct struct {
+  StartTime int64            `xml:"starttime,attr"`
+  EndTime   int64            `xml:"endtime,attr"`
+  Status    StatusStruct     `xml:"status"`
+  Addr      []AddrStruct     `xml:"address"`
+  Hostname  []HostnameStruct `xml:"hostnames>hostname"`
+  Ports     []PortStruct     `xml:"ports>port"`
+}
+
 type StatusStruct struct {
 	State     string `xml:"state,attr"`
 	Reason    string `xml:"reason,attr"`
@@ -71,30 +82,17 @@ type HostnameStruct struct {
 	Name string `xml:"name,attr"`
 	Type string `xml:"type,attr"`
 }
-type StateStruct struct {
-	State     string `xml:"state,attr"`
-	Reason    string `xml:"reason,attr"`
-	Reasonttl int    `xml:"reason_ttl,attr"`
+
+type PortStruct struct {
+  Protocol string        `xml:"protocol,attr"`
+  PortID   int           `xml:"portid,attr"`
+  State    StatusStruct  `xml:"state"`
+  Service  ServiceStruct `xml:"service"`
 }
 type ServiceStruct struct {
 	Name   string `xml:"name,attr"`
 	Method string `xml:"method,attr"`
 	Conf   int    `xml:"conf,attr"`
-}
-type PortStruct struct {
-	Protocol string        `xml:"protocol,attr"`
-	PortID   int           `xml:"portid,attr"`
-	State    StateStruct   `xml:"state"`
-	Service  ServiceStruct `xml:"service"`
-}
-
-type HostStruct struct {
-	StartTime int64            `xml:"starttime,attr"`
-	EndTime   int64            `xml:"endtime,attr"`
-	Status    StatusStruct     `xml:"status"`
-	Addr      []AddrStruct     `xml:"address"`
-	Hostname  []HostnameStruct `xml:"hostnames>hostname"`
-	Ports     []PortStruct     `xml:"ports>port"`
 }
 
 type HostJSON struct {
@@ -160,7 +158,6 @@ func getHostInfo(h HostStruct, dl, dh int) (name, hn, hi string, dhcp bool) {
 func findLocal() string {
 	addr, _ := net.InterfaceAddrs()
 	for _, j := range addr {
-		//log.Printf( " -Addesses %s", j.String())
 		ip, _, err := net.ParseCIDR(j.String())
 		if err != nil {
 			log.Printf("ParseCIDR failed")
