@@ -6,8 +6,7 @@
 
 * Copy the files into install directory
 ```
-rsync -av src/templates /srv/Raven/
-rsync -av src/huggin /srv/Raven/
+rsync -av bin/ /srv/Raven/
 rsync -av etc/raven.ini /srv/Raven/
 rsync -av etc/raven.service /etc/systemd/system/
 ```
