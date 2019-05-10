@@ -236,6 +236,8 @@ func StartWebserver(port string) {
 	http.HandleFunc("/thread", lastMessage)
 	http.HandleFunc("/startup", errMessage)
 	http.HandleFunc("/api/status", jsonStatus)
-	ravenLog.SendError(10, "StartWebServer", fmt.Sprintf("Webserver Starting '%s'", port))
-	log.Fatal(http.ListenAndServe(port, nil))
+	ravenLog.SendError(12, "StartWebServer", fmt.Sprintf("Webserver Starting '%s'", port))
+	go func() {
+    log.Fatal(http.ListenAndServe(port, nil))
+  }()
 }
