@@ -23,6 +23,7 @@ import (
 	"./license"
 	"./raven"
 	"./raven/ravenLog"
+  "./raven/ravenChecks"
 	"flag"
 	"fmt"
 	"log"
@@ -40,6 +41,7 @@ func main() {
 	webPort := flag.String("port", ":8000", "Webserver Port")
 	workers := flag.Int("workers", 3, "Worker Process")
 	version := flag.Bool("version", false, "Display Full Version")
+  plugins := flag.String("plugdir", "./plugins", "Plugins Directory")
 	flag.Parse()
 
 	if *version {
@@ -47,8 +49,11 @@ func main() {
 	}
 
 	ravenLog.SendError(10, "main", fmt.Sprintf("Config File: %s", *configFile))
+	ravenLog.SendError(10, "main", fmt.Sprintf("PluginDir: %s", *plugins))
 	ravenLog.SendError(10, "main", fmt.Sprintf("Listen Port: %s", *webPort))
 	ravenLog.SendError(10, "main", fmt.Sprintf("Workers: %d", *workers))
+
+  ravenChecks.LoadPlugins(*plugins)
 	raven.ReadConfig(*configFile)
 	raven.BuildSchedule()
 	raven.StartSchedule(*workers)

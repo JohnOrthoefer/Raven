@@ -20,10 +20,12 @@
 package ravenChecks
 
 import (
+  "fmt"
   "log"
   "path/filepath"
   "plugin"
 	"../ravenTypes"
+	"../ravenLog"
 )
 
 type CheckIMap map[string]ravenTypes.CheckInitType
@@ -33,16 +35,19 @@ var CheckInit CheckIMap
 var CheckFunc CheckFMap
 
 func init() {
+}
+
+func LoadPlugins( plugDir string) {
   CheckFunc = make(CheckFMap)
 	CheckInit = make(CheckIMap)
 
-  plugins, err := filepath.Glob( "plugins/*.so")
+  plugins, err := filepath.Glob( fmt.Sprintf( "%s/*.so", plugDir))
   if err != nil {
     log.Fatal(err)
   }
 
-  for i,v := range plugins {
-    log.Printf("Plugin-%d: %s\n", i, v)
+  for _,v := range plugins {
+    ravenLog.SendError( 10, "Plugin", fmt.Sprintf("Loading %s", v))
 
     plug,err := plugin.Open(v)
     if err != nil {
