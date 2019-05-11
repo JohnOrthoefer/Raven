@@ -61,9 +61,12 @@ func RunCheck(he *ravenTypes.HostEntry, options interface{}) *ravenTypes.ExitRet
 	fullOpts := opts.progOpts
 	if opts.addH {
 		target := he.Hostname
-		if he.IPv4 != "" && !opts.useDNS {
+		if he.IPv4 != "" { 
 			target = he.IPv4
 		}
+    if opts.useDNS && he.Hostname != "" {
+      target = hr.Hostname
+    }
 		fullOpts = append(fullOpts, "-H", target)
 	}
 	rtnExit, output := RunExternal(opts.prog, fullOpts...)
