@@ -60,12 +60,16 @@ func RunCheck(he *ravenTypes.HostEntry, options interface{}) *ravenTypes.ExitRet
 
 	fullOpts := opts.progOpts
 	if opts.addH {
-		target := he.Hostname
-		if he.IPv4 != "" { 
-			target = he.IPv4
-		}
-    if opts.useDNS && he.Hostname != "" {
-      target = hr.Hostname
+		var target string
+    if he.Hostname == "" {
+      target = he.IPv4
+		} else if he.IPv4 == "" {
+			target = he.Hostname
+		} else {
+      target = he.IPv4
+      if opts.useDNS {
+        target = hr.Hostname
+      }
     }
 		fullOpts = append(fullOpts, "-H", target)
 	}
