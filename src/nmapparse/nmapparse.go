@@ -147,12 +147,13 @@ func getHostInfo(h HostStruct, dl, dh int) (name, hn, hi string, dhcp bool) {
 
 	octets := strings.Split(hi, ".")
 	lsv, _ := strconv.Atoi(octets[3])
-	dhcp = (lsv >= dl) && (lsv <= dh)
 	if hn == "" {
 		name = fmt.Sprintf("NO-Name-%d", lsv)
+    dhcp = false
 	} else {
     s := strings.Split(hn, ".")
     name = s[0]
+	  dhcp = (lsv >= dl) && (lsv <= dh)
   }
 	return name, hn, hi, dhcp
 }
@@ -254,7 +255,9 @@ func main() {
 		hr.When = time.Unix(v.EndTime, 0)
 		hr.Enabled = !*disabled
 		section := ini.NewSection(hr.Name)
-		section.Add("hostname", hr.Hostname)
+    if hr.Hostname != "" {
+  		section.Add("hostname", hr.Hostname)
+    }
 		section.Add("group", groupName)
 		section.Add("enabled", fmt.Sprintf("%t", hr.Enabled))
 		if !hr.DHCP {
