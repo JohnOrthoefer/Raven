@@ -68,7 +68,7 @@ func RunCheck(he *ravenTypes.HostEntry, options interface{}) *ravenTypes.ExitRet
 		} else {
       target = he.IPv4
       if opts.useDNS {
-        target = hr.Hostname
+        target = he.Hostname
       }
     }
 		fullOpts = append(fullOpts, "-H", target)
