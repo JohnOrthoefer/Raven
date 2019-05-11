@@ -148,11 +148,14 @@ func getHostInfo(h HostStruct, dl, dh int) (name, hn, hi string, dhcp bool) {
 	octets := strings.Split(hi, ".")
 	lsv, _ := strconv.Atoi(octets[3])
 	dhcp = (lsv >= dl) && (lsv <= dh)
+	var name string
 	if hn == "" {
-		hn = fmt.Sprintf("NO-Name-%d", lsv)
-	}
-	s := strings.Split(hn, ".")
-	return s[0], hn, hi, dhcp
+		name = fmt.Sprintf("NO-Name-%d", lsv)
+	} else {
+    s := strings.Split(hn, ".")
+    name = s[0]
+  }
+	return name, hn, hi, dhcp
 }
 
 func findLocal() string {
@@ -236,7 +239,7 @@ func main() {
 	}
 
 	//ini := ini.NewIni()
-	ini := ini.Load(baseini)
+	ini := ini.Load(*baseini)
 	hosts := make(map[string]*HostJSON)
 	portsEnabled := make(map[int][]string)
 
