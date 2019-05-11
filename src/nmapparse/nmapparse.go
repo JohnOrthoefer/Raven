@@ -148,7 +148,6 @@ func getHostInfo(h HostStruct, dl, dh int) (name, hn, hi string, dhcp bool) {
 	octets := strings.Split(hi, ".")
 	lsv, _ := strconv.Atoi(octets[3])
 	dhcp = (lsv >= dl) && (lsv <= dh)
-	var name string
 	if hn == "" {
 		name = fmt.Sprintf("NO-Name-%d", lsv)
 	} else {
