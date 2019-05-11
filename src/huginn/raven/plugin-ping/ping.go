@@ -75,7 +75,7 @@ func pingInit(kw ravenTypes.Kwargs) interface{} {
 	var r interface{}
 	rtn := pingComm(kw)
 	rtn.name = "Ping"
-	rtn.pingProg = kw.GetKwargStr("program", "/usr/bin/ping")
+	rtn.pingProg = kw.GetKwargStr("program", "/bin/ping")
 	rtn.rttReg = rePing["ping-rtt"]
 	rtn.lossReg = rePing["ping-loss"]
 	r = rtn
