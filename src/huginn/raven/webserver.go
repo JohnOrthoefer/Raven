@@ -39,8 +39,12 @@ type TemplateConfig struct {
 	TemplateIncludePath string
 }
 type DataType struct {
-	Now  string
-	Data interface{}
+	Now       string
+  hostCnt   int
+  checkCnt  int
+  statusCnt int
+  states    [4]int
+	Data    interface{}
 }
 type statusOutputList []statusOutput
 
@@ -149,6 +153,15 @@ func loadTemplates() {
 	ravenLog.SendError(10, "loadTemplates", fmt.Sprintf("templates loading successful"))
 }
 
+func countStatus() [4]int {
+  var cnts [4]int
+
+  for _,v := range status {
+    cnts[v.CurExit] += 1
+  }
+  return cnts
+}
+
 func renderTemplate(w http.ResponseWriter, name string, data interface{}) {
 	tmpl, ok := templates[name]
 	if !ok {
@@ -159,7 +172,11 @@ func renderTemplate(w http.ResponseWriter, name string, data interface{}) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
 	d := DataType{
-		Now:  time.Now().Format(time.UnixDate),
+		Now:        time.Now().Format(time.UnixDate),
+    hostCnt:    len(hosts),
+    checkCnt:   len(checks),
+    statusCnt:  len(status),
+    states:     countStatus(),
 		Data: data,
 	}
 	err := tmpl.Execute(w, d)
@@ -222,6 +239,11 @@ func errMessage(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "errors.tmpl", data)
 }
 
+func aboutMessage(w http.ResponseWriter, r *http.Request) {
+  data := ""
+	renderTemplate(w, "about.tmpl", data)
+}
+
 func StartWebserver(port string) {
 
 	ravenLog.SendError(10, "StartWebserver", "Loading Templates")
@@ -229,6 +251,7 @@ func StartWebserver(port string) {
 	loadTemplates()
 
 	ravenLog.SendError(10, "StartWebserver", "Loading Handler functions")
+	http.HandleFunc("/", aboutMessage)
 	http.HandleFunc("/errors", errStatus)
 	http.HandleFunc("/status", webStatus)
 	http.HandleFunc("/tabstatus", tabStatus)
