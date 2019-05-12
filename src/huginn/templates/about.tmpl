@@ -24,12 +24,12 @@
 {{end}}
 
 {{ define "content" }}
-  Hosts: {{ .hostCnt }} <br>
-  Checks: {{ .checkCnt }} <br>
-  Status: {{ .statusCnt }} <br>
-  hostCnt (OK) {{ index .states 0 }} <br>
-  hostCnt (Warn) {{ index .states 1 }} <br>
-  hostCnt (Crit) {{ index .states 2 }} <br>
-  hostCnt (Unknown) {{ index .states 3 }} <br>
+  Hosts: {{ .HostCnt }} <br>
+  Checks: {{ .CheckCnt }} <br>
+  Status: {{ .StatusCnt }} <br>
+  hostCnt (OK) {{ index .States 0 }} <br>
+  hostCnt (Warn) {{ index .States 1 }} <br>
+  hostCnt (Crit) {{ index .States 2 }} <br>
+  hostCnt (Unknown) {{ index .States 3 }} <br>
   
 {{ end }}
