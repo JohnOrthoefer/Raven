@@ -27,9 +27,9 @@
   Hosts: {{ .hostCnt }} <br>
   Checks: {{ .checkCnt }} <br>
   Status: {{ .statusCnt }} <br>
-  hostCnt (OK) {{ .states[0] }} <br>
-  hostCnt (Warn) {{ .states[1] }} <br>
-  hostCnt (Crit) {{ .states[2] }} <br>
-  hostCnt (Unknown) {{ .states[3] }} <br>
+  hostCnt (OK) {{ index .states 0 }} <br>
+  hostCnt (Warn) {{ index .states 1 }} <br>
+  hostCnt (Crit) {{ index .states 2 }} <br>
+  hostCnt (Unknown) {{ index .states 3 }} <br>
   
 {{ end }}

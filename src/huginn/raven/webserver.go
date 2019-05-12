@@ -40,10 +40,10 @@ type TemplateConfig struct {
 }
 type DataType struct {
 	Now       string
-  hostCnt   int
-  checkCnt  int
-  statusCnt int
-  states    [4]int
+  HostCnt   int
+  CheckCnt  int
+  StatusCnt int
+  States    [4]int
 	Data    interface{}
 }
 type statusOutputList []statusOutput
@@ -173,10 +173,10 @@ func renderTemplate(w http.ResponseWriter, name string, data interface{}) {
 
 	d := DataType{
 		Now:        time.Now().Format(time.UnixDate),
-    hostCnt:    len(hosts),
-    checkCnt:   len(checks),
-    statusCnt:  len(status),
-    states:     countStatus(),
+    HostCnt:    len(hosts),
+    CheckCnt:   len(checks),
+    StatusCnt:  len(status),
+    States:     countStatus(),
 		Data: data,
 	}
 	err := tmpl.Execute(w, d)
