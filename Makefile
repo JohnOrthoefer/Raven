@@ -1,9 +1,14 @@
 export VER=$(shell git tag | head -1)
 export ROOTDIR=$(PWD)
-export GO=$(shell which go)
 export BINDIR=$(ROOTDIR)/bin
 export PLUGINDIR=$(BINDIR)/plugins
 export TMPLDIR=$(BINDIR)/templates
+
+GO := $(shell which go)
+ifneq ($(.SHELLSTATUS),0) 
+	$(error No go compiler in path)
+endif
+export GO
 
 
 all: 
