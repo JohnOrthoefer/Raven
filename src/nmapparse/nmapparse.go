@@ -177,7 +177,9 @@ func findLocal() string {
 
 func runNmap(lnet string) []byte {
 	nmapExec := "/usr/bin/nmap"
-	nmapOpts := []string{"-oX", "-",
+	nmapOpts := []string{
+    "--system-dns",
+    "-oX", "-",
 		"-p", "22,23,25,80,123,161,162,443",
 		lnet}
 	log.Printf("Running %s %s", nmapExec, strings.Join(nmapOpts, " "))
