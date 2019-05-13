@@ -1,6 +1,6 @@
 export VER=$(shell git tag | head -1)
 export ROOTDIR=$(PWD)
-export GO=/usr/bin/go
+export GO=$(shell which go)
 export BINDIR=$(ROOTDIR)/bin
 export PLUGINDIR=$(BINDIR)/plugins
 export TMPLDIR=$(BINDIR)/templates
@@ -17,7 +17,7 @@ clean:
 	rm -rf $(BINDIR)
 	$(MAKE) -C src clean
 
-tar:
+tar: clean
 	-mkdir ../raven-$(VER)
 	rsync -av src Makefile COPYING README.md docs etc ../raven-$(VER)/
 	(cd ..; tar czf raven-$(VER).tar.gz raven-$(VER))
