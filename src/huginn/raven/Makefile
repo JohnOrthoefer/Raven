@@ -1,3 +1,7 @@
+ifndef ROOTDIR
+$(error Please run from package root)
+endif
+
 all:
 	$(MAKE) -C plugin-nagios
 	$(MAKE) -C plugin-ping

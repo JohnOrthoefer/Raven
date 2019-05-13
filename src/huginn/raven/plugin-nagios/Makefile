@@ -1,3 +1,7 @@
+ifndef ROOTDIR
+$(error Please run from package root)
+endif
+
 TARGET=nagios
 SRC=$(TARGET).go
 OBJ=$(TARGET).so

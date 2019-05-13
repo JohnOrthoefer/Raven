@@ -1,3 +1,7 @@
+ifndef ROOTDIR
+$(error Please run from package root)
+endif
+
 TARGET=viassh
 SRC=$(TARGET).go
 OBJ=$(TARGET).so
