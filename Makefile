@@ -1,4 +1,4 @@
-export VER=0.2
+export VER=$(shell git tag | head -1)
 export ROOTDIR=$(PWD)
 export GO=/usr/bin/go
 export BINDIR=$(ROOTDIR)/bin
@@ -7,6 +7,7 @@ export TMPLDIR=$(BINDIR)/templates
 
 
 all: 
+	@echo Version- $(VER)
 	mkdir -p $(BINDIR)
 	mkdir -p $(PLUGINDIR)
 	mkdir -p $(TMPLDIR)
