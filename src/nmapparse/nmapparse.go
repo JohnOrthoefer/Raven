@@ -30,6 +30,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net"
+  "os"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -213,6 +214,9 @@ func main() {
 	flag.Parse()
 
 	groupName := *gname
+  if _,err := os.Stat(*baseini); err != nil && *iniFile {
+    log.Fatal(err)
+  }
 
 	// if scanfile is empty try running nmap
 	if *scanfile == "" {
@@ -240,7 +244,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	//ini := ini.NewIni()
 	ini := ini.Load(*baseini)
 	hosts := make(map[string]*HostJSON)
 	portsEnabled := make(map[int][]string)
