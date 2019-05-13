@@ -9,7 +9,7 @@ BIN=$(TARGET)
 
 all: $(BINDIR)/$(BIN)
 	$(MAKE) -C raven
-	rsync -av templates $(BINDIR)/
+	rsync -av templates/ $(TMPLDIR)
 
 $(BINDIR)/$(BIN): $(BIN) 
 	cp $(BIN) $(BINDIR)

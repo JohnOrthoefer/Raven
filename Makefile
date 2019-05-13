@@ -1,8 +1,10 @@
 export VER=$(shell git tag | head -1)
 export ROOTDIR=$(PWD)
-export BINDIR=$(ROOTDIR)/bin
+export INSTALLDIR=${ROOTDIR}/srv
+export BINDIR=$(INSTALLDIR)/bin
 export PLUGINDIR=$(BINDIR)/plugins
-export TMPLDIR=$(BINDIR)/templates
+export ETCDIR=$(INSTALLDIR)/etc
+export TMPLDIR=$(INSTALLDIR)/templates
 
 GO := $(shell which go)
 ifneq ($(.SHELLSTATUS),0) 
@@ -19,7 +21,7 @@ all:
 	$(MAKE) -C src all
 
 clean:
-	rm -rf $(BINDIR)
+	rm -rf $(INSTALLDIR)
 	$(MAKE) -C src clean
 
 tar: clean

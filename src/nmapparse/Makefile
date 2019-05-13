@@ -10,7 +10,9 @@ INI=base.ini
 
 $(BINDIR)/$(BIN): $(BIN) $(INI)
 	cp $(BIN) $(BINDIR)
-	cp $(INI) $(BINDIR)
+
+$(ETCDIR)/$(INI): $(INI)
+	cp $(INI) $(ETCDIR)
 
 version.go:
 	$(GENVER)

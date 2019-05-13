@@ -29,3 +29,4 @@ src/huginn/huginn
 src/nmapparse/nmapparse
 tmp/
 bin/
+srv/
