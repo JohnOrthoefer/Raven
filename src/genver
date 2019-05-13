@@ -18,7 +18,7 @@ LAST=".last_commit"
 BUILD_DATE=`date +%Y-%m-%d\ %H:%M`
 GITSHA=`git rev-parse HEAD`
 GITBRANCH=`git branch | fgrep \*  | cut -f 2- -d\ `
-GITTAG=`git tag | head`
+GITTAG=`git tag | head -1`
 GITCOMMIT=`git log -1 --pretty=oneline`
 VERSIONFILE=version.go
 
