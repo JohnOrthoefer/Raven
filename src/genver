@@ -13,19 +13,16 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-cd $(dirname $0)/..
 
-BASEDIR=`pwd`
-SRCDIR=${BASEDIR}/src
-BINDIR=${BASEDIR}/bin
-echo BASEDIR = ${BASEDIR}
-echo BINDIR = ${BINDIR}
-echo SRCDIR = ${SRCDIR}
-
+LAST=".last_commit"
 BUILD_DATE=`date +%Y-%m-%d\ %H:%M`
+GITSHA=`git rev-parse HEAD`
+GITBRANCH=`git branch | fgrep \*  | cut -f 2- -d\ `
 GITTAG=`git tag | head`
 GITCOMMIT=`git log -1 --pretty=oneline`
-VERSIONFILE=${SRCDIR}/huginn/version.go
+VERSIONFILE=version.go
+
+echo ${GITSHA} | diff --brief --new-file - ${LAST} > /dev/null && exit 0
 
 echo Generating Version file
 rm -f ${VERSIONFILE}
@@ -33,6 +30,8 @@ cat <<EOP > ${VERSIONFILE}
 package main
 const (
   BUILD_DATE = "${BUILD_DATE}"
+  SHA = "${GITSHA}"
+  BRANCH = "${GITBRANCH}"
   VERSION = "${GITTAG}"
   COMMIT = "${GITCOMMIT}"
   FULL = \`
@@ -41,29 +40,6 @@ const (
 )
 EOP
 
-echo Build plugins
-(cd ${SRCDIR}/huginn/raven
-  for i in plugin-*/*.go ; do
-    d=`dirname ${i}`
-    p=`basename ${i} .go`
-    echo -- Building ${d}
-    go build -buildmode=plugin -o ${BINDIR}/plugins/${p}.so ${d}/${p}.go
-  done 
-)
-
-echo Building huginn
-(cd ${SRCDIR}/huginn
-  go build -o ${BINDIR}/huginn huginn.go version.go 
-  echo -- copy web templates
-  rsync -a templates ${BINDIR}
-)
-
-echo Build nmapparse
-cp ${VERSIONFILE} ${SRCDIR}/nmapparse/
-(cd ${SRCDIR}/nmapparse
-  go build -o ${BINDIR}/nmapparse nmapparse.go version.go
-  echo -- copy base.ini
-  rsync -a base.ini ${BINDIR}
-)
+echo ${GITSHA} > ${LAST}
 
 exit 0

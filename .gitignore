@@ -22,8 +22,10 @@ __pycache__/
 *~
 
 # build products
-#huginn
-#nmapparse
-src/*/version.go
+version.go
+.last_commit
+*.so
+src/huginn/huginn
+src/nmapparse/nmapparse
 tmp/
 bin/
