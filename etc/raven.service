@@ -16,7 +16,7 @@ Environment= CONFIG="/srv/Raven/raven.ini"
 Environment= WORKERS="10"
 Environment= WEBPORT=":8000"
 EnvironmentFile=-/etc/conf.d/raven
-ExecStart=/srv/Raven/huginn -config ${CONFIG} -workers ${WORKERS} -port ${WEBPORT}
+ExecStart=/srv/Raven/bin/huginn -config ${CONFIG} -workers ${WORKERS} -port ${WEBPORT}
 Restart=always
 
 [Install]
