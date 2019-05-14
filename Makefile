@@ -12,13 +12,16 @@ ifneq ($(.SHELLSTATUS),0)
 endif
 export GO
 
-
-all: 
+all: $(BINDIR) $(PLUGINDIR) $(TMPLDIR)
 	@echo Version- $(VER)
-	mkdir -p $(BINDIR)
-	mkdir -p $(PLUGINDIR)
-	mkdir -p $(TMPLDIR)
 	$(MAKE) -C src all
+
+$(BINDIR):
+	mkdir -p $(BINDIR)
+$(PLUGINDIR):
+	mkdir -p $(PLUGINDIR)
+$(TMPLDIR):
+	mkdir -p $(TMPLDIR)
 
 clean:
 	rm -rf $(INSTALLDIR)
