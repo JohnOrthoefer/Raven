@@ -29,9 +29,8 @@ If you do not provide at either `-json` or `-ini` the program only prints to the
 All the monitoring goes into a single ini file.   
 
 There are two section types:
-* **Checks** Monitors to run, to be considered a check, the section **must have** a `checkwith =` key in it.  Currently there are 4 built in monitor/checks:
+* **Checks** Monitors to run, to be considered a check, the section **must have** a `checkwith =` key in it.  Currently there are 3 built in monitor/checks:
   * **ping** - Simply use the ping command to check for a host reachablity
-  * **fping** - This is a secondary function of the ping it uses the ``fping`` program instead of the regular OS `ping` command.
   * **nagios** - Runs a nagios check.  Nagios is another NMS system, which has a rich set of checks written as a stand alone programs.  Instead of needing to *reinvent* all of them I choose to leveage them.
   * **viassh** - This runs `ssh` to reach out and check another host, mostly tested with nagios-check commands on the far end. 
 
@@ -54,9 +53,7 @@ There are a few Keys that are common to every check.
 * `count = 5` This will be passed to the ping program as `-c N` for the number of times to send a ping each check.
 * `rtt_warn = 20.0` and `rtt_crit = 30.0` The round trip time(rtt) in ms if exceeded on average to consider warning or critical.
 * `loss_warn = 20` or `loss_crit = 40` The percentage of loss packets to consider warning or critical.
-
-### `checkwith = fping`
-This is the same as ping, with the exception of the program to run which is by default `program = /usr/bin/fping`.  It does change the regular expressions used to find the average rtt and % loss.  
+* `usefping = false` when set to true it will call `/usr/bin/fping` instead
 
 ### `checkwith = nagios`
 This runs a nagios check.  
