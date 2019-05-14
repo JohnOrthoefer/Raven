@@ -27,7 +27,7 @@ import (
 	"fmt"
   "sort"
 //	goini "github.com/ochinchina/go-ini"
-  "gopkg.in/ini.v1"
+  "github.com/go-ini/ini"
 	"io/ioutil"
 	"log"
 	"net"
@@ -251,12 +251,15 @@ func main() {
 //  if _,filename,_,ok := runtime.Caller(0); ok {
 //    log.Printf("filepath: %s\n", path.Join(path.Dir(filename)))
 //  }
-  ini := goini.NewIni()
+  cfg := ini.Empty()
   if *iniFile {
     if _,err := os.Stat(*baseini); err != nil {
       log.Fatal(err)
     }
-	  ini = goini.Load(*baseini)
+	  err := cfg.Append(*baseini)
+    if err != nil {
+      log.Fatal(err)
+    }
   }
 	hosts := make(map[string]*HostJSON)
 	portsEnabled := make(map[int][]string)
@@ -272,14 +275,14 @@ func main() {
 		hr.Name, hr.Hostname, hr.IPv4, hr.DHCP = getHostInfo(v, dhcplow, dhcphi)
 		hr.When = time.Unix(v.EndTime, 0)
 		hr.Enabled = !*disabled
-		section := ini.NewSection(hr.Name)
+		section,_ := cfg.NewSection(hr.Name)
     if hr.Hostname != "" {
-      section.Add("hostname", hr.Hostname)
+      section.Key("hostname").SetValue(hr.Hostname)
     }
-		section.Add("group", groupName)
-		section.Add("enabled", fmt.Sprintf("%t", hr.Enabled))
+		section.Key("group").SetValue(groupName)
+		section.Key("enabled").SetValue(fmt.Sprintf("%t", hr.Enabled))
 		if !hr.DHCP {
-			section.Add("ipv4", hr.IPv4)
+			section.Key("ipv4").SetValue(hr.IPv4)
 		}
 		portsEnabled[0] = append(portsEnabled[0], hr.Name)
 		for _, p := range v.Ports {
@@ -300,11 +303,11 @@ func main() {
     v := portsEnabled[k]
 		log.Printf("Port:%d %s", k, strings.Join(v, " "))
 		c := []string{"Check", strconv.Itoa(k)}
-		section, err := ini.GetSection(strings.Join(c, "-"))
-		if err != nil {
-			continue
-		}
-		section.Add("hosts", strings.Join(v, " "))
+		section,err := cfg.GetSection(strings.Join(c, "-"))
+    if err != nil {
+      continue
+    }
+		section.Key("hosts").SetValue(strings.Join(v, " "))
 	}
 
 	if *iniFile {
@@ -313,10 +316,8 @@ func main() {
 		b.WriteString(".ini")
 		outfile := b.String()
 
-		buf := bytes.NewBufferString("")
-		ini.Write(buf)
 		log.Printf("Writing %s", outfile)
-		ini.WriteToFile(outfile)
+		cfg.SaveToIndent(outfile, "  ")
 	}
 
 	if *jsonFile {
