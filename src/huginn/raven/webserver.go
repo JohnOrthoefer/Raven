@@ -114,6 +114,7 @@ func jsonStatus(w http.ResponseWriter, r *http.Request) {
 }
 
 func loadConfiguration() {
+  // Todo: add a configuration file that allows you to move these
 	templateConfig.TemplateLayoutPath = "templates/layouts/"
 	templateConfig.TemplateIncludePath = "templates/"
 }
@@ -123,12 +124,14 @@ func loadTemplates() {
 		templates = make(map[string]*template.Template)
 	}
 
+// These are the overall layout files (headers, menus etc)
 	layoutFiles, err := filepath.Glob(templateConfig.TemplateLayoutPath + "*.tmpl")
 	if err != nil {
 		log.Fatal(err)
 	}
 	ravenLog.SendError(10, "loadTemplates", fmt.Sprintf("layoutFiles: %v", layoutFiles))
 
+// These are the specific parts included to make up each page
 	includeFiles, err := filepath.Glob(templateConfig.TemplateIncludePath + "*.tmpl")
 	if err != nil {
 		log.Fatal(err)
