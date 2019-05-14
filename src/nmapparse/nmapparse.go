@@ -26,7 +26,6 @@ import (
 	"flag"
 	"fmt"
   "sort"
-//	goini "github.com/ochinchina/go-ini"
   "github.com/go-ini/ini"
 	"io/ioutil"
 	"log"
@@ -37,8 +36,6 @@ import (
 	"strings"
 	"syscall"
 	"time"
-  //"runtime"
-  //"path"
 )
 
 // Structure to keep the nmap output XML into
@@ -252,6 +249,8 @@ func main() {
 //    log.Printf("filepath: %s\n", path.Join(path.Dir(filename)))
 //  }
   cfg := ini.Empty()
+  main := cfg.Section("")
+  main.Comment = fmt.Sprintf("%s %s\nRun Started at %s", nmap.Scanner, nmap.Args, nmap.StartS)
   if *iniFile {
     if _,err := os.Stat(*baseini); err != nil {
       log.Fatal(err)
@@ -291,6 +290,7 @@ func main() {
 				portsEnabled[p.PortID] = append(portsEnabled[p.PortID], hr.Name)
 			}
 		}
+    section.Key("hostname").Comment = fmt.Sprintf("Open Ports: %v", hr.Ports)
 		log.Printf("%s(%s) %v", hr.Name, hr.IPv4, hr.Ports)
 		hosts[hr.Name] = hr
 	}
