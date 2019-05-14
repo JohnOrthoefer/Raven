@@ -26,7 +26,8 @@ import (
 	"flag"
 	"fmt"
   "sort"
-	ini "github.com/ochinchina/go-ini"
+//	goini "github.com/ochinchina/go-ini"
+  "gopkg.in/ini.v1"
 	"io/ioutil"
 	"log"
 	"net"
@@ -36,6 +37,8 @@ import (
 	"strings"
 	"syscall"
 	"time"
+  //"runtime"
+  //"path"
 )
 
 // Structure to keep the nmap output XML into
@@ -205,6 +208,7 @@ func main() {
 	scanfile := flag.String("xml", "", "XML Output from nmap")
 	gname := flag.String("group", "Internal-LAN",
 		"Group for hosts on this network")
+  outfile := flag.String("output", "raven", "Output filename without exetention")
 	lnet := flag.String("net", "", "CIDR network to scan with nmap")
 	dhcpRange := flag.String("dhcp", "100-200", "DHCP address range")
 	iniFile := flag.Bool("ini", false, "Output to file (ini format)")
@@ -244,7 +248,16 @@ func main() {
 		log.Fatal(err)
 	}
 
-	ini := ini.Load(*baseini)
+//  if _,filename,_,ok := runtime.Caller(0); ok {
+//    log.Printf("filepath: %s\n", path.Join(path.Dir(filename)))
+//  }
+  ini := goini.NewIni()
+  if *iniFile {
+    if _,err := os.Stat(*baseini); err != nil {
+      log.Fatal(err)
+    }
+	  ini = goini.Load(*baseini)
+  }
 	hosts := make(map[string]*HostJSON)
 	portsEnabled := make(map[int][]string)
 
@@ -261,7 +274,7 @@ func main() {
 		hr.Enabled = !*disabled
 		section := ini.NewSection(hr.Name)
     if hr.Hostname != "" {
-  		section.Add("hostname", hr.Hostname)
+      section.Add("hostname", hr.Hostname)
     }
 		section.Add("group", groupName)
 		section.Add("enabled", fmt.Sprintf("%t", hr.Enabled))
@@ -296,7 +309,7 @@ func main() {
 
 	if *iniFile {
 		var b strings.Builder
-		b.WriteString(groupName)
+		b.WriteString(*outfile)
 		b.WriteString(".ini")
 		outfile := b.String()
 
@@ -308,7 +321,7 @@ func main() {
 
 	if *jsonFile {
 		var b strings.Builder
-		b.WriteString(groupName)
+		b.WriteString(*outfile)
 		b.WriteString(".json")
 		outfile := b.String()
 
