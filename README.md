@@ -18,6 +18,7 @@ What I want, is just a webpage I can go to and see if the reason my Xbox can't g
 ## Goals
 * Simple config, .ini files
 * Lightweight process, Raspberry Pi Model 2B+ is the target platform
+  * Note I have it monitoring 18 hosts with 42 tests running fine on a Pi Zero-W.   <5% CPU and <3% Memory
 * Little Disk I/O, Raspberry Pi uses a flash card
 
 ## History
