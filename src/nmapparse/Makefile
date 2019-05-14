@@ -8,6 +8,8 @@ OBJ=$(TARGET).so
 BIN=$(TARGET)
 INI=base.ini
 
+ALL: $(BINDIR)/$(BIN) $(ETCDIR)/$(INI)
+
 $(BINDIR)/$(BIN): $(BIN) $(INI)
 	cp $(BIN) $(BINDIR)
 

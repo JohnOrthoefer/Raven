@@ -12,16 +12,21 @@ ifneq ($(.SHELLSTATUS),0)
 endif
 export GO
 
-all: $(BINDIR) $(PLUGINDIR) $(TMPLDIR)
+all: $(BINDIR) $(PLUGINDIR) $(TMPLDIR) $(ETCDIR)
 	@echo Version- $(VER)
 	$(MAKE) -C src all
 
 $(BINDIR):
 	mkdir -p $(BINDIR)
+$(ETCDIR):
+	mkdir -p $(ETCDIR)
 $(PLUGINDIR):
 	mkdir -p $(PLUGINDIR)
 $(TMPLDIR):
 	mkdir -p $(TMPLDIR)
+
+depend:
+	$(GO) get github.com/go-ini/ini
 
 clean:
 	rm -rf $(INSTALLDIR)
