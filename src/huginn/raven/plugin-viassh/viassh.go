@@ -29,12 +29,13 @@ import (
 )
 
 type viasshOpts struct {
-	sshexec  string
-	sshOpts  []string
-	prog     string
-	progOpts []string
-	addH     bool
-	useDNS   bool
+	sshexec   string
+	sshOpts   []string
+	prog      string
+	progOpts  []string
+	addH      bool
+	useDNS    bool
+  hostSmash bool
 	//resplit   *regexp.Regexp
 }
 
@@ -55,6 +56,7 @@ func InitCheck(kw ravenTypes.Kwargs) interface{} {
 	rtn.progOpts = kw.GetKwargStrA("options", rtn.progOpts)
 	rtn.addH = kw.GetKwargBool("addhost", true)
 	rtn.useDNS = kw.GetKwargBool("usedns", false)
+  rtn.hostSmash = kw.GetKwargBool( "hostlower", true)
 	r = rtn
 	return r
 }
@@ -63,7 +65,12 @@ func RunCheck(he *ravenTypes.HostEntry, options interface{}) *ravenTypes.ExitRet
 	e := new(ravenTypes.ExitReturn)
 	opts := options.(*viasshOpts)
 
-	fullOpts := append(opts.sshOpts, "--", he.Hostname)
+	fullOpts := append(opts.sshOpts, "--")
+  if opts.hostSmash {
+    fullOpts = append(fullOpts, strings.ToLower(he.Hostname))
+  } else {
+    fullOpts = append(fullOpts, he.Hostname)
+  }
 	fullOpts = append(fullOpts, opts.prog)
 	fullOpts = append(fullOpts, opts.progOpts...)
 	rtnExit, output := RunExternal(opts.sshexec, fullOpts...)
