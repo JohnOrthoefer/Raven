@@ -12,12 +12,12 @@ User=raven
 Type=simple
 PIDFile=/run/raven.pid
 WorkingDirectory=/srv/Raven
-Environment= CONFIG="/srv/Raven/etc/raven.ini" 
-Environment= PLUGDIR="/srv/Raven/bin/plugins"
-Environment= WORKERS="3"
-Environment= WEBPORT=":8000"
+Environment=CONFIG="/srv/Raven/etc/raven.ini" 
+Environment=PLUGDIR="/srv/Raven/bin/plugins"
+Environment=WORKERS="4"
+Environment=WEBPORT=":8000"
 EnvironmentFile=-/etc/conf.d/raven
-ExecStart=/srv/Raven/bin/huginn -config ${CONFIG} -workers ${WORKERS} -port ${WEBPORT} -plugdir ${PLUGDIR}
+ExecStart=/srv/Raven/bin/huginn -config "${CONFIG}" -workers "${WORKERS}" -port "${WEBPORT}" -plugdir "${PLUGDIR}"
 Restart=always
 
 [Install]
