@@ -3,7 +3,8 @@ $(error Please run from package root)
 endif
 
 TARGET=nmapparse
-SRC=$(TARGET).go version.go
+VERSION=$(shell pwd)/license/version.go
+SRC=$(TARGET).go 
 OBJ=$(TARGET).so
 BIN=$(TARGET)
 INI=base.ini
@@ -16,11 +17,11 @@ $(BINDIR)/$(BIN): $(BIN) $(INI)
 $(ETCDIR)/$(INI): $(INI)
 	cp $(INI) $(ETCDIR)
 
-version.go:
-	$(GENVER)
+$(VERSION):
+	$(GENVER) $(shell dirname $(VERSION))
 
-$(BIN): $(SRC)
+$(BIN): $(SRC) $(VERSION)
 	$(GO) build $(SRC)
 
 clean:
-	rm -f $(BIN) .last_commit version.go
+	rm -f $(BIN) .last_commit $(VERSION)
