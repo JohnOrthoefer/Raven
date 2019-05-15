@@ -18,7 +18,7 @@ $(BINDIR)/$(BIN): $(BIN)
 $(VERSION):
 	$(GENVER) $(shell dirname $(VERSION))
 
-$(BIN): $(SRC) $(VERSION)
+$(BIN): $(SRC) $(VERSION) raven/*.go
 	$(GO) build $(SRC)
 
 clean:
