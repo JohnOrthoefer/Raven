@@ -68,6 +68,7 @@ type HostStruct struct {
   Addr      []AddrStruct     `xml:"address"`
   Hostname  []HostnameStruct `xml:"hostnames>hostname"`
   Ports     []PortStruct     `xml:"ports>port"`
+  OSInfo    OSStruct         `xml:"os>osmatch"`
 }
 
 type StatusStruct struct {
@@ -83,7 +84,10 @@ type HostnameStruct struct {
 	Name string `xml:"name,attr"`
 	Type string `xml:"type,attr"`
 }
-
+type OSStruct struct {
+  Name    string        `xml:"name,attr"`
+  Acc     string        `xml:"accuracy"`
+}
 type PortStruct struct {
   Protocol string        `xml:"protocol,attr"`
   PortID   int           `xml:"portid,attr"`
@@ -104,6 +108,7 @@ type HostJSON struct {
 	IPv4     string    `json:"ipv4"`
 	When     time.Time `json:"lastseen"`
 	Ports    []int     `json:"ports"`
+  OS       string    `json:"OSName"`
 }
 
 func runExternal(prog string, args ...string) (int, string) {
@@ -176,13 +181,16 @@ func findLocal() string {
 	return ""
 }
 
-func runNmap(lnet string) []byte {
+func runNmap(lnet string, osdisc bool) []byte {
 	nmapExec := "/usr/bin/nmap"
 	nmapOpts := []string{
     "--system-dns",
     "-oX", "-",
-		"-p", "22,23,25,80,123,161,162,443",
-		lnet}
+		"-p", "22,23,25,80,123,161,162,443"}
+  if osdisc {
+    nmapOpts = append( nmapOpts, "-O")
+  }
+  nmapOpts = append( nmapOpts, lnet)
 	log.Printf("Running %s %s", nmapExec, strings.Join(nmapOpts, " "))
 	e, out := runExternal(nmapExec, nmapOpts...)
 	log.Printf("Done Exit: %d", e)
@@ -212,6 +220,7 @@ func main() {
 	jsonFile := flag.Bool("json", false, "Output to file (json format)")
 	baseini := flag.String("skel", "base.ini", "Skeleton file for ini file generaton")
 	disabled := flag.Bool("disabled", false, "Mark all hosts as enabled=false")
+  osDiscovery := flag.Bool( "osdiscovery", false, "Run Host Discovery (Requires Admin)")
 	flag.Parse()
 
 	groupName := *gname
@@ -230,7 +239,7 @@ func main() {
 		if localNet == "" {
 			log.Fatal("no interfaces found")
 		}
-		xmlblob = runNmap(localNet)
+		xmlblob = runNmap(localNet,*osDiscovery)
 	} else {
 		// read a provided XML file
 		log.Printf("Starting reading %s", scanfile)
@@ -272,6 +281,7 @@ func main() {
 	for _, v := range nmap.Host {
 		hr := new(HostJSON)
 		hr.Name, hr.Hostname, hr.IPv4, hr.DHCP = getHostInfo(v, dhcplow, dhcphi)
+    hr.OS = v.OSInfo.Name
 		hr.When = time.Unix(v.EndTime, 0)
 		hr.Enabled = !*disabled
 		section,_ := cfg.NewSection(hr.Name)
@@ -290,7 +300,7 @@ func main() {
 				portsEnabled[p.PortID] = append(portsEnabled[p.PortID], hr.Name)
 			}
 		}
-    section.Key("hostname").Comment = fmt.Sprintf("Open Ports: %v", hr.Ports)
+    section.Comment = fmt.Sprintf("Host: %s (%s)\nOpen Ports: %v", hr.Hostname, hr.IPv4, hr.Ports)
 		log.Printf("%s(%s) %v", hr.Name, hr.IPv4, hr.Ports)
 		hosts[hr.Name] = hr
 	}
