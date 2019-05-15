@@ -26,6 +26,7 @@ package ravenRunCommand
 import (
 	"bytes"
 	"log"
+  "os"
 	"os/exec"
 	"syscall"
 )
@@ -33,6 +34,10 @@ import (
 func RunExternal(prog string, args ...string) (int, string) {
 
 	var out bytes.Buffer
+
+  if _,err := os.Stat(prog); err != nil {
+    return -1, "Program not found."
+  }
 
 	cmd := exec.Command(prog, args...)
 
