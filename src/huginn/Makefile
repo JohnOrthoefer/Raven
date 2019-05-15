@@ -3,7 +3,7 @@ $(error Please run from package root)
 endif
 
 TARGET=huginn
-SRC=$(TARGET).go version.go
+SRC=$(TARGET).go
 OBJ=$(TARGET).so
 BIN=$(TARGET)
 
@@ -14,8 +14,8 @@ all: $(BINDIR)/$(BIN)
 $(BINDIR)/$(BIN): $(BIN) 
 	cp $(BIN) $(BINDIR)
 
-version.go: 
-	$(GENVER)
+licenses/version.go: 
+	$(GENVER) ${PWD}/licenses
 
 $(BIN): $(SRC)
 	$(GO) build $(SRC)

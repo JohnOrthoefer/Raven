@@ -37,8 +37,8 @@ func buildLicense(v, c string) (rtn []string) {
 		"it under certain conditions.  For details see COPYING text file.")
 }
 
-func LogLicense(v, c string) {
-	for _, v := range buildLicense(v, c) {
+func LogLicense() {
+	for _, v := range buildLicense(VERSION, COMMIT) {
 		log.Printf("%s", v)
 	}
 }
@@ -49,10 +49,10 @@ func licenseOutput(w io.Writer, v, c string) {
 	}
 }
 
-func PrintLicense(v, c string) {
-	licenseOutput(os.Stdout, v, c)
+func PrintLicense() {
+	licenseOutput(os.Stdout, VERSION, COMMIT)
 }
 
-func ErrLicense(v, c string) {
-	licenseOutput(os.Stderr, v, c)
+func ErrLicense() {
+	licenseOutput(os.Stderr, VERSION, COMMIT)
 }

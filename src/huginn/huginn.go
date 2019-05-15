@@ -33,8 +33,8 @@ import (
 )
 
 func main() {
-	license.LogLicense(VERSION, COMMIT)
-	log.Printf("Commit: %s", COMMIT)
+	license.LogLicense()
+	//log.Printf("Commit: %s", license.COMMIT)
 	ravenLog.SendError(10, "main", "Starting...")
 
 	configFile := flag.String("config", "../etc/raven.ini", "Configuration File")
@@ -45,7 +45,7 @@ func main() {
 	flag.Parse()
 
 	if *version {
-		log.Fatal(FULL)
+		log.Fatal(license.FULL)
 	}
 
 	ravenLog.SendError(10, "main", fmt.Sprintf("Config File: %s", *configFile))
