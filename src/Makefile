@@ -5,7 +5,7 @@ endif
 ifndef ROOTDIR
 $(error Please run from package root)
 endif
-export GENVER=$(shell pwd)/genver
+export GENVER=$(UTILDIR)/genver
 
 all: 
 	$(MAKE) -C huginn

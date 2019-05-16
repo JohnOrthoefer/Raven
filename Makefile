@@ -1,6 +1,7 @@
 export VER=$(shell git tag | head -1)
 export ROOTDIR=$(PWD)
-export INSTALLDIR=${ROOTDIR}/srv
+export INSTALLDIR=$(ROOTDIR)/srv
+export UTILDIR=$(ROOTDIR)/utils
 export BINDIR=$(INSTALLDIR)/bin
 export PLUGINDIR=$(BINDIR)/plugins
 export ETCDIR=$(INSTALLDIR)/etc
