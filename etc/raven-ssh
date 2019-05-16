@@ -1,0 +1,50 @@
+#!/bin/bash
+#   Raven Network Discovery and Monitoring
+#   Copyright (C) 2019 John{at}Orthoefer{dot}org
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+CMDPATH=/usr/lib/monitoring-plugins:/usr/lib/nagios/plugins
+
+SSH_SRC=`echo ${SSH_CONNECTION} | cut -f 1 -d\ `
+SSH_DST=`echo ${SSH_CONNECTION} | cut -f 3 -d\ `
+if [ -z "${SSH_ORIGINAL_COMMAND}" ]; then
+  logger --tag `basename $0` --id=$$ \
+         --priority authpriv.notice \
+	 "Failure No Command, SRC=${SSH_SRC} DST=${SSH_DST}"
+  echo "SSH UNKNOWN - No Command SRC=${SSH_SRC} DST=${SSH_DST}"
+  exit 4
+fi
+CMD=`echo ${SSH_ORIGINAL_COMMAND} | cut -f 1 -d\ `
+CMD=`basename ${CMD}`
+OPT=`echo ${SSH_ORIGINAL_COMMAND} | cut -f 2- -d\ `
+
+IFS=':' read -r -a path <<< "$CMDPATH"
+
+for i in "${path[@]}"
+do
+  [ -d ${i} -a -x ${i}/${CMD} ] && CMDRUN="${i}/${CMD} ${OPT}"
+done
+
+if [ -n "${CMDRUN}" ] ; then 
+  logger --tag `basename $0` --id=$$ \
+         --priority authpriv.notice \
+	 "Success SRC=${SSH_SRC} DST=${SSH_DST} CMD=\"${CMDRUN}\""
+  exec ${CMDRUN}
+  echo "SSH UNKNOWN - Exec failure SRC=${SSH_SRC} DST=${SSH_DST} CMD=\"${CMDRUN}\""
+  exit 4
+fi
+
+logger --tag `basename $0` --id=$$ \
+       --priority authpriv.notice \
+       "Failure could not find command SRC=${SSH_SRC} DST=${SSH_DST} CMD=\"${CMDRUN}\""
+echo "SSH UNKNOWN - SRC=${SSH_SRC} DST=${SSH_DST} CMD=${CMD}"
+exit 4
