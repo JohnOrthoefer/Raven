@@ -1,0 +1,41 @@
+#!/bin/bash
+
+NAME="PACMAN"
+PACMAN="/usr/bin/pacman"
+CRIT=20
+WARN=10
+VERBOSE=0
+
+ok() { echo "${NAME} OK - $1"; exit 0; }
+warn() { echo "${NAME} WARNING - $1"; exit 1; }
+crit() { echo "${NAME} CRITICAL - $1"; exit 2; }
+unknown() { echo "${NAME} UNKNOWN - $1"; exit 3; }
+usage() { echo "Usage: $0 [-c NUM] [-w NUM] [-p PACMAN]" 1>&2; exit 1; }
+
+while getopts ":w:c:p:v" o; do
+    case "${o}" in
+        w) WARN=${OPTARG} ;;
+        c) CRIT=${OPTARG} ;;
+        p) PACMAN=${OPTARG} ;;
+        v) VERBOSE=1 ;;
+        *) usage ;;
+    esac
+done
+
+[ ${VERBOSE} ] && echo "p:${PACMAN} w:${WARN} c:${CRIT}"
+
+[ ! -x ${PACMAN} ] && unknown "Can not find pacman executable"
+
+${PACMAN} -Sy > /dev/null 
+[ $? -ne 0 ] && unknown "Can not update database"
+
+COUNT=`${PACMAN} -Qu | wc -l`
+[ $? -ne 0 ] && unknown "Update query failed"
+
+[ ${COUNT} -ge ${CRIT} ] && crit "Updates available (${COUNT} > ${CRIT})"
+[ ${COUNT} -ge ${WARN} ] && warn "Updates available (${COUNT} > ${WARN})"
+[ ${COUNT} -gt 0 ] && ok "Updates available (${COUNT})"
+
+ok "No Updates available"
+
+exit 0
