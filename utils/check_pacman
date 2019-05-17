@@ -4,7 +4,8 @@ NAME="PACMAN"
 PACMAN="/usr/bin/pacman"
 CRIT=20
 WARN=10
-VERBOSE=0
+VERBOSE=
+KERNEL=
 
 ok() { echo "${NAME} OK - $1"; exit 0; }
 warn() { echo "${NAME} WARNING - $1"; exit 1; }
@@ -12,12 +13,13 @@ crit() { echo "${NAME} CRITICAL - $1"; exit 2; }
 unknown() { echo "${NAME} UNKNOWN - $1"; exit 3; }
 usage() { echo "Usage: $0 [-c NUM] [-w NUM] [-p PACMAN]" 1>&2; exit 1; }
 
-while getopts ":w:c:p:v" o; do
+while getopts ":w:c:p:vk" o; do
     case "${o}" in
         w) WARN=${OPTARG} ;;
         c) CRIT=${OPTARG} ;;
         p) PACMAN=${OPTARG} ;;
         v) VERBOSE=1 ;;
+        k) KERNEL=1 ;;
         *) usage ;;
     esac
 done
@@ -31,6 +33,11 @@ ${PACMAN} -Sy > /dev/null
 
 COUNT=`${PACMAN} -Qu | wc -l`
 [ $? -ne 0 ] && unknown "Update query failed"
+
+KINST=`${PACMAN} -Q -o /boot/config.txt | rev | cut -f1 -d\  | rev`
+KRUN=`uname -r | rev | cut -f2- -d- | rev`
+
+[ ${KINST} != ${KRUN} ] && warn "New Kernel Installed:${KINST} Running:${KRUN}"
 
 [ ${COUNT} -ge ${CRIT} ] && crit "Updates available (${COUNT} > ${CRIT})"
 [ ${COUNT} -ge ${WARN} ] && warn "Updates available (${COUNT} > ${WARN})"
